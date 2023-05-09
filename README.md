@@ -5,8 +5,9 @@
 > Proyecto de Programación I.
 > Facultad de Matemática y Computación - Universidad de La Habana.
 
- Para incializar el buscador, copiamos los documentos de tipo .txt en la carpeta Content e iniciamos el proyecto
-abrir la carpeta del proyecto y ejecutar en la terminal de Linux:
+ Para incializar el buscador, copiamos los documentos de tipo .txt en la carpeta Content, y tenemos que garantizar que el nombre de la carpeta principal
+ sea moogle-main e iniciamos el proyecto.
+ Para ello debemos abrir la carpeta del proyecto y ejecutar en la terminal de Linux:
 
 ```bash
 make dev
