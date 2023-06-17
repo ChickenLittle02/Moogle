@@ -17,12 +17,10 @@ namespace MoogleEngine
 
 
 
-            string folder = Directory.GetCurrentDirectory();
-            //Aqui recibo donde se encuentra mi proyecto que estoy ejecutando
+            string folder = Path.Join(@"..","Content");
 
-            // System.Console.WriteLine("folder sin cambiar    "+folder);
-            folder = MoogleEngine.ModVec.ToPath(folder);
-            //Aqui introduzco la direccion donde se encuentran mis documentos
+            //Aqui recibo donde se encuentra mi proyecto que estoy ejecutando, con .. sale de la carpeta donde esta corriendo el proyecto
+            //Y despues entra a la carpeta Content
 
 
             // System.Console.WriteLine("folder cambiada    "+folder);

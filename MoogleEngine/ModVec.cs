@@ -2,29 +2,6 @@ namespace MoogleEngine
 {
     public class ModVec
     {
-        public static string ToPath(string folder)
-        {
-            //EL metodo ToPath recibe un string con el path de acceso a MoogleEngine
-            //Y devuelve un path con el acceso a la carpeta Content de documentos
-
-            //Last es un valor de entero que guarda la posicion donde aparece por ultima
-            //vez moogle... que es la parte que tienen en comun el path de acceso a 
-            //MoogleMain y el path de acceso a Content
-            int last = folder.LastIndexOf(@"moogle-main") + 12;
-
-
-            //al path de acceso a MoogleEngine se le hace un Substring del tamaño de last
-            //y que empieza en la posicion 0 del string folder, y despues se le agrega Content
-            //QUe es en lo unico que se diferencian los dos path
-            string copy = folder.Substring(0, last) + "Content";
-
-            //System.Console.WriteLine(copy);
-            return copy;
-        }
-
-
-
-
 
 
         public static Dictionary<string, string> DocText(string[] paths)
