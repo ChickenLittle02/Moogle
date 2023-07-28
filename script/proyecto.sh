@@ -4,16 +4,16 @@ echo report
 echo show_report
 echo slides
 echo show_slides
+echo clean
  read Var
  if [ "$Var" == -ne ];
-then
- cd ..
+then 
  make dev
 fi
  if [ "$Var" == "report" ];
 then 
  cd ..
- cd informe
+ cd informe 
  pdflatex informe.tex
 fi
  if [ "$Var" == "show_report" ];
@@ -38,3 +38,15 @@ fi
 then 
  echo 
 fi
+
+ if [ "$Var" == "clean" ];
+ then
+ cd ..
+ cd informe
+ carpeta=$(pwd)
+ find "$carpeta" ! -name '*.pdf' ! -name '*.tex' ! -name '*.jpg' -type f -delete
+ cd ..
+ cd presentacion
+ find "$carpeta" ! -name '*.pdf' ! -name '*.tex' ! -name '*.jpg' -type f -delete
+ fi
+ 
