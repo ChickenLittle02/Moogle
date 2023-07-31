@@ -1,0 +1,160 @@
+\section{Implementación}
+\subsection{¿Cómo se implementó el Moogle?}
+\begin{frame}
+    ¿Cómo se implementó el Moogle?
+    \vspace{0.5cm}
+    {
+        \begin{columns}
+            \begin{column}{0.3\textwidth}
+                ModVec
+            \end{column}
+            \begin{column}{0.8\textwidth}
+                La clase donde se realiza todo el procesamiento de
+                los textos de los documentos para realizar los
+                cálculos del Modelo Vectorial utilizando las
+                formulas del TF-IDF,  los cálculos para calcular el
+                peso de cada palabra de la búsqueda del usuario, y
+                la similitud de coseno para calcular el score de
+                cada documento según su relevancia.
+
+            \end{column}
+        \end{columns}
+    }
+    \pause
+    \vspace{0.5cm}
+    {
+        \begin{columns}
+            \begin{column}{0.3\textwidth}
+                Inicio
+            \end{column}
+            \begin{column}{0.8\textwidth}
+                La clase donde se inicializan los datos,
+                sobre los documentos, que se van a utilizar
+                para cada búsqueda. Datos que se pueden
+                crear antes de que el usuario haga la
+                búsqueda. \\
+                Ej. Diccionario IDF$<$palabras,IDF de la palabra$>$
+
+
+            \end{column}
+        \end{columns}
+    }
+\end{frame}
+\begin{frame}
+    ¿Cómo se implementó el Moogle?
+    \vspace{1cm}
+    {
+        \begin{columns}
+            \begin{column}{0.3\textwidth}
+                Búsqueda
+            \end{column}
+            \begin{column}{0.8\textwidth}
+                La clase donde se trabaja con la query
+                para crear una sugerencia, y para despues
+                con el método ModVec calcular el peso de
+                cada una de sus palabras.
+
+            \end{column}
+        \end{columns}
+    }
+    \pause
+    \vspace{1cm}
+    {
+        \begin{columns}
+            \begin{column}{0.3\textwidth}
+                Ops
+            \end{column}
+            \begin{column}{0.8\textwidth}
+                La clase con la que después de calcular el
+                score de cada documento se le aplica
+                el efecto de los distintos operadores
+                ! , $\wedge$ , $\sim$ , *  a los resultados
+
+
+            \end{column}
+        \end{columns}
+    }
+\end{frame}
+
+\subsection{Funcionamiento}
+\begin{frame}
+    \centering
+    {\large ¿Cómo funciona Moogle!? \par}
+    %\vspace{.5cm}
+    \begin{enumerate}
+        \item Cuando se ejecuta el proyecto,
+              se ponen en funcionamiento una serie de métodos
+              que procesan el texto de los documentos,
+              los métodos de la clase Inicio, que llaman a
+              algunos métodos de la clase ModVec, y para cuando
+              aparece la pagina web del Moogle está creado un
+              Diccionario de
+
+              $<$documentos, Diccionario$<$ palabras del documento, TF-IDF de cada palabra$>>$
+
+    \end{enumerate}
+
+
+
+\end{frame}
+\begin{frame}
+    \centering
+    {\large ¿Cómo funciona Moogle!? \par}
+    %\vspace{.5cm}
+    \begin{enumerate}
+        \item Cuando introducimos una busqueda en
+              nuestra página, se comienza a ejecutar el
+              método Query de la clase Moogle, que:
+
+              \begin{enumerate}[\alph{enumii}]
+                  \item Primero trabaja con la query hasta crear
+                        la sugerencia, utilizando los métodos de la
+                        clase Busqueda, y 	después, utilizando los
+                        métodos de la clase ModVec crea un
+                        Diccionario de
+
+                        $<$palabras de la query, peso de cada palabra$>$
+                  \item Posteriormente utilizando la clase ModVec,
+                        y los archivos creados al iniciar el Proyecto,
+                        se calcula la similitude de coseno de cada
+                        documento con la query, asignándole un score a
+                        cada document y creando un Diccionario de
+
+                        $<$Documentos, Score del Documento$>$
+
+                  \item Despues utilizando los metodos de la clase
+                        Ops, se le aplica el efecto de los distintos
+                        operadores a ese 	diccionario, quedándonos
+                        con una parte de los documentos que nos
+                        importan para dar como resultados
+
+              \end{enumerate}
+    \end{enumerate}
+
+
+
+\end{frame}
+
+\begin{frame}
+    \begin{enumerate}[\alph{enumi}]
+
+        \item Y a ese Diccionario en dependencia de si
+              todas las palabras de la búsqueda tienen el
+              operador !  o no se 	eliminan los documentos
+              con score 0 o no
+
+        \item Después se ordenan los documentos y se
+              da como resultado un máximo de 5 documentos,
+              y además la sugerencia, que es lo que devuelve
+              el método Query.
+
+                  {\large Y esos documentos y la sugerencia que
+                      son devueltas son mostradas en la pagina
+                      donde el usuario hizo la búsqueda}
+
+
+    \end{enumerate}
+
+\end{frame}
+
+

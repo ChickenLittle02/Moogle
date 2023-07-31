@@ -31,12 +31,24 @@ then
    xdg-open "$archivo"
 fi
  if [ "$Var" == "slides" ];
-then 
- echo
+ then
+ cd ..
+ cd presentacion 
+ pdflatex presentacion.tex
 fi
  if [ "$Var" == "show_slides" ];
-then 
- echo 
+ then
+ cd ..
+ cd presentacion
+    if [ ! -f  "presentacion.pdf" ];
+    then 
+ pdflatex presentacion.tex
+ clear
+    fi
+   cd ..
+   cd presentacion
+   archivo=$(pwd)/presentacion.pdf
+   xdg-open "$archivo"
 fi
 
  if [ "$Var" == "clean" ];
