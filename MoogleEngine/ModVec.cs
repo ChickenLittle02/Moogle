@@ -290,16 +290,11 @@ namespace MoogleEngine
 
 
 
-        public static Dictionary<string, Dictionary<string, double>> toTF_IDF(Dictionary<string, Dictionary<string, double>> DOcumentTF, Dictionary<string, double> DOcumentIDF)
+        public static void toTF_IDF(Dictionary<string, Dictionary<string, double>> DOcumentTF, Dictionary<string, double> DOcumentIDF)
         {
             //Este metodo recibe un diccionario DOcumentTF con los TF de cada palabra en cada documento, y un diccionario con los IDF
             //Devuelve un diccionario<nombre de documento,DIccionario<palabras del documento, valores TF_IDF>>
             //EL TF_IDF es el valor TF de la palabra en ese documento por el valor IDF de esa palabra
-
-
-
-            Dictionary<string, Dictionary<string, double>> DOcumentTF_IDF = new Dictionary<string, Dictionary<string, double>>();
-            // DocumentTF_IDF es un diccionario diccionario<nombre de documento,DIccionario<palabras del documento, valores TF_IDF
 
 
             bool exist;
@@ -312,37 +307,31 @@ namespace MoogleEngine
 
 
 
-            foreach (var item in DOcumentTF)
+            foreach (var document in DOcumentTF)
             {//Con este foreach voy iterando por cada documento, y por cada uno creo un diccionario de <palabras, valor TF_IDF> 
              //y despues voy iterando por todos los elementos del IDF y comprobando si estan en las palabras,
              //SI estan el value de cada palabra en el TF seria el valor tf, entonces lo multiplico por el valor IDF, y ese producto es el TF_IDF
              //EN caso de no estar agregada la palabra entonces la agrego y le pongo como valor TF_IDF 0
 
-                Dictionary<string, double> Documento = new Dictionary<string, double>();
-                //Documento va a ser un diccionario <palabras,valor TF_IDF de cada palabra>
-
-
 
                 foreach (var word in DOcumentIDF)
                 {
-                    exist = (item.Value).ContainsKey(word.Key);
+                    exist = (document.Value).ContainsKey(word.Key);
 
 
                     if (exist)
                     {
-                        TF = item.Value[word.Key];
+                        TF = document.Value[word.Key];
                         IDF = word.Value;
-                        Documento[word.Key] = TF * IDF;
+                        document.Value[word.Key] = TF * IDF;
 
                     }
                     else
                     {
-                        Documento[word.Key] = 0;
+                        document.Value[word.Key] = 0;
                     }
 
                 }
-
-                DOcumentTF_IDF[item.Key] = Documento;
             }
 
 
@@ -355,10 +344,6 @@ namespace MoogleEngine
             //     }
             //     System.Console.WriteLine("Se acabo el drama");
             // }
-
-
-
-            return DOcumentTF_IDF;
         }
 
 

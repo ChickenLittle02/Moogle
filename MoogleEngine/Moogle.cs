@@ -56,7 +56,7 @@ public static class Moogle
 
 
 
-        Dictionary<string, double> DocScoresClean = Ops.CleanDocs(Inicio.DocumentTF, QueryDividido, QueryClean, DocScores, Inicio.DocumentoDividido);
+        Dictionary<string, double> DocScoresClean = Ops.CleanDocs(Inicio.DocumentTF_IDF, QueryDividido, QueryClean, DocScores, Inicio.DocumentoDividido);
         //Resultados modificados segun los operadores, ver si se puede cambiar dividequery por QueryDIvidido sin problemas
 
 
