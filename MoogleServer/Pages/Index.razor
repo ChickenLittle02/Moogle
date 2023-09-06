@@ -2,12 +2,14 @@
 
 <PageTitle>Moogle!</PageTitle>
 
-<h1>🔍 Moogle!</h1>
+<h1 style="color: white;">Moogle!</h1>
 
-<input class="p-1 my-4" @bind="query" placeholder="Introduzca su búsqueda">
+<div class="input_div"> 
+    
+<input class="p-1 my-4" @onkeypress="CheckEnter" @bind="query" placeholder="Introduzca su búsqueda">
 
-<button type="default" class="btn btn-primary" @onclick="RunQuery">🔍 Buscar</button>
-
+<button type="default" class="btn btn-primary" @onclick="RunQuery"></button>
+</div>
 @if (!string.IsNullOrEmpty(result.Suggestion)) {
     <div class="suggestion">
         <p>¿Quisite decir <strong><a href="#">@result.Suggestion</a></strong>?</p>
@@ -28,6 +30,12 @@
 @code {
     private string query = "";
     private SearchResult result = new SearchResult();
+        private void CheckEnter(KeyboardEventArgs e){
+        if(e.Key == "Enter"){
+            System.Console.WriteLine("Entro a esta talla y la query es"+query);
+            RunQuery();
+        }
+    }
 
     private void RunQuery() {
         result = Moogle.Query(query);
