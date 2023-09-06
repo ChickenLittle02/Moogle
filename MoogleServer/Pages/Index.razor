@@ -6,7 +6,7 @@
 
 <div class="input_div"> 
     
-<input class="p-1 my-4" @onkeypress="CheckEnter" @bind="query" placeholder="Introduzca su búsqueda">
+<input class="p-1 my-4" @bind="query" @onkeyup="CheckEnter" placeholder="Introduzca su búsqueda">
 
 <button type="default" class="btn btn-primary" @onclick="RunQuery"></button>
 </div>
