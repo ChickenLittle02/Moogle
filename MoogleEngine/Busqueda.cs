@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using System.Threading.Tasks.Dataflow;
 namespace MoogleEngine
 {
@@ -41,40 +42,15 @@ namespace MoogleEngine
 
     
     public static string[] Clean(string[] query){
-        //Este es un metodo que recibe un array de string y por cada posicion de ese array me quita los operadores
+        //Este es un metodo que recibe un array de string y por cada posicion de ese array me quita todos los caracteres distintos de
+        //\p{L} letras, \d digitos, \s espacios en blanco, y distintos de los operadores ^, !, ~, *
+        
         string[] Without = new string[query.Length];
-        Array.Copy(query, Without, query.Length);
-
-
-        string caracteres = '"'+@"'\|@#€¬[]}{ª·$%&/()=?¿Ç¨_:;¡´' ,'<>+`º-."; //Esta es la linea principal
-        char[] CharCaract = caracteres.ToCharArray();
-
-
-    //    char[] caracteres = {'!','^','~','*'};
 
             for(int i = 0; i<Without.Length; i++){
-                //Este for me va iterando por cada posicion del array, y me divide la palabra en un array de string sin los operadores
-                //Y con Join me vuelve a unir todas las posiciones devolviendome un string con la palabra sin los operadores
-
-                    Without[i] = string.Join("",Without[i].Split(CharCaract));    
-                                 
+                //Este for me va iterando por cada posicion del array query y me va guardando en cada posición 
+                    Without[i]=Regex.Replace(query[i], @"[^\p{L}\d\s^!~*]", "");
             }
-
-        // System.Console.WriteLine("query");
-        //     foreach (var item in query)
-        //     {
-        //         System.Console.WriteLine(item);
-        //     }
-
-        // System.Console.WriteLine("without");
-
-        //     foreach (var item in Without)
-        //     {
-        //         System.Console.WriteLine(item);
-        //     }
-
-
-        // System.Console.WriteLine("Se acabo el drama");
 
         return Without;
 
@@ -83,36 +59,17 @@ namespace MoogleEngine
 
 
 
-    public static string[] LowerString(string[] DivideQuery){
-        //Este es un metodo que recibe un array de string con las palabras de la query solamente, y por cada posicion del array
-        //Me pone la palabra en minuscula
-
+        public static string[] LowerString(string[] DivideQuery){
+        //Este es un metodo que recibe un array de string con las palabras de la query con operadores, y me elimina por cada palabra
+        //sus operadores
             string[] Without = new string[DivideQuery.Length];
-            Array.Copy(DivideQuery, Without, DivideQuery.Length);
-
-            char[] caracteres = {'!','^','~','*'};
 
             for(int i = 0; i<Without.Length; i++){
-                //Este for me va iterando por cada posicion del array, y me divide la palabra en un array de string sin los operadores
-                //Y con Join me vuelve a unir todas las posiciones devolviendome un string con la palabra sin los operadores
+                //Este for me va iterando por cada posicion del array, y me remplaza por cada palabra los operadores por ""
 
-                    Without[i] = string.Join("",Without[i].Split(caracteres));    
-                                 
+                      Without[i] = Regex.Replace(DivideQuery[i],@"[!~^*]","" );           
+                      
             }
-            
-            // System.Console.WriteLine("COn operadores");
-            
-            // foreach (var item in DivideQuery)
-            // {
-            //     System.Console.WriteLine("DIvide  : {0}",item);
-            // }
-
-            // System.Console.WriteLine("sin operadores");
-
-            // foreach (var item in Without)
-            // {
-            //     System.Console.WriteLine("Lower  : {0}",item);
-            // }
 
 
     return Without;

@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 namespace MoogleEngine
 {
     public class ModVec
@@ -115,25 +116,23 @@ namespace MoogleEngine
 
 
 
-        private static string[] RemoveChar(string full)
+                private static string[] RemoveChar(string full)
         {
             //Metodo para quitar signos de puntuacion y demas caracteres que afectan la comprension por la pc
 
-
-            //Se le pone el " como un char porque como es un string lo que estoy creando no puedo usar las comillas dentro
-            string caracteres = '"' + @"'\|@#~€¬[]}{ª·$%&/()=?¿^*Ç¨_:;¡!´' ,'<>+`º-.";
-
-            char[] CharCaract = caracteres.ToCharArray();
-
-
-            string[] sinCarac = full.Split(CharCaract, StringSplitOptions.RemoveEmptyEntries);
-            //SPlit divide un string en partes cuando encuentre los caracteres de CHarCaract, y con StringSplitOptions.RemoveEmptyEntries
+            full = Regex.Replace(full,@"[^\p{L}\d\s]", "");
+            //Regex.Replace está remplaxando todos los caracteres que no son \p{L} letras, que no son \d digitos decimales y que no son
+            // espacios en blanco \s, por el caracter vacío ""
+            
+            string[] sinCarac = full.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+            //Split divide un string en partes cuando encuentre el caracter "", y con StringSplitOptions.RemoveEmptyEntries
             //hacemos que se omitan las posiciones del array que sean solo espacios en blanco
 
 
             return sinCarac;
 
         }
+
 
 
 
