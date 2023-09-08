@@ -47,21 +47,28 @@
 
 Para la creación del Proyecto se implementaron diferentes clases en MoogleEngine:
 \begin{itemize}
-      \item ModVec: La clase donde se realiza todo el procesamiento de los textos de los documentos
-            para realizar los cálculos del Modelo Vectorial utilizando las fórmulas del TF-IDF,
-            los cálculos para obtener el peso de cada palabra de la búsqueda del usuario,
-            y la similitud de coseno para calcular el score de cada documento según su relevancia.
-      \item Inicio: La clase donde se inicializan los datos, y se completan con la información sobre
+      \item \textbf{Inicio:} La clase donde se inicializan los datos, y se completan con la información sobre
             los documentos que se van a utilizar para cada búsqueda. Datos que se pueden crear
             antes de que el usuario haga la búsqueda.
             Ej. Diccionario IDF de $<$string,double$>$ con $<$palabras , IDF de la palabra$>$
-      \item Búsqueda: La clase donde se trabaja con la query para crear una sugerencia,
+      \item \textbf{ModVec:} La clase donde se realiza todo el procesamiento de los textos de los documentos
+            para realizar los cálculos del Modelo Vectorial utilizando las fórmulas del TF-IDF,
+            los cálculos para obtener el peso de cada palabra de la búsqueda del usuario,
+            y la similitud de coseno para calcular el score de cada documento según su relevancia.
+      \item \textbf{Búsqueda:} La clase donde se trabaja con la query para crear una sugerencia,
             y para después con el método ModVec calcular el peso de cada una de sus palabras
-      \item Ops: La clase con la que después de calcular el score de
+      \item \textbf{Ops:} La clase con la que después de calcular el score de
             cada documento se le aplica el efecto de los distintos operadores
             ! , $\wedge$ , $\sim$ , * a los resultados
+      \item \textbf{Matrices:} Una clase que no se ejecuta en el proyecto, pero que permite sumar,
+            restar y multiplicar matrices.
 
 \end{itemize}
+Además, se hicieron cambios en la interfaz gráfica del Moogle!,
+agregando un fondo de pantalla, modificando la barra de búsqueda,
+y agregando la funcionalidad de que al tocar la tecla Enter se
+ejecute la búsqueda.
+
 \section{Funcionamiento}
 
 Cómo funciona Moogle! ??
@@ -71,12 +78,16 @@ Cómo funciona Moogle! ??
             $<$documentos, Diccionario$<$palabras del documento, TF-IDF de cada palabra$>>$
       \item Cuando introducimos una búsqueda en nuestra página, se comienza a ejecutar el método Query de la clase Moogle, que:
             \begin{enumerate}
-                  \item Primero trabaja con la query hasta crear la sugerencia, utilizando los métodos de la clase
-                        Búsqueda, y después, utilizando los métodos de la clase ModVec crea un Diccionario de
+                  \item Primero, utilizando los métodos de la clase Búsqueda, trabaja con
+                        la query hasta crear la sugerencia,  y después, utilizando los métodos
+                        de la clase ModVec crea un Diccionario de
                         $<$palabras de la query, peso de cada palabra$>$
                   \item Posteriormente utilizando la clase ModVec, y los archivos creados al iniciar el Proyecto, se calcula la similitud de coseno de cada documento con la query, asignándole un score a cada documento y creando un Diccionario de
                         $<$Documentos, Score del Documento$>$
-                  \item Después utilizando los métodos de la clase Ops, se le aplica el efecto de los distintos operadores a ese diccionario, quedándonos con una parte de los documentos que nos importan para dar como resultados
+                  \item Después utilizando los métodos de la clase Ops,
+                        se le aplica el efecto de los distintos operadores a ese
+                        diccionario, quedándonos con la parte de los documentos
+                        que nos importan para dar como resultados
                   \item Y a ese Diccionario en dependencia de si todas las palabras de la búsqueda tienen el operador ! o no, se le eliminan los documentos con score 0.
                   \item Después se ordenan los documentos y se dan como resultado los 5 primeros documentos, y además la sugerencia, que es lo que devuelve el método Query.
                         Y esos documentos y la sugerencia que son devueltas son mostradas en la página donde el usuario hizo la búsqueda
@@ -87,18 +98,16 @@ Cómo funciona Moogle! ??
 
 \section{Ejecución del proyecto}
 
-Cuando el proyecto comienza a ejecutarse antes de abrirse la página web
+Cuando el proyecto comienza a ejecutarse, antes de abrirse la página web
 en la que el usuario introduce la búsqueda, se ejecuta el método Main
 de la clase Inicio de MoogleEngine, y ahí se comienza a hacer lo siguiente:
 
 \begin{enumerate}
       \item Primeramente, hay que acceder a la carpeta donde están todos los documentos
             para comenzar a procesar los textos de cada uno; para acceder a ella
-            utilizamos en la clase Directory el método CurrentDirectory, que nos
-            devuelve el path de acceso a la carpeta donde se está corriendo el método,
-            ese path lo modificamos con el método ToPath de la clase ModVec y ahí ya
-            tenemos el path de acceso a la carpeta donde se almacenan todos
-            los documentos.
+            utilizamos el método Path.Join al que le indicamos que debe salir al directorio
+            padre y entrar en la carpeta Content, y devolver el path de acceso a esa carpeta
+            que es dónde están todos los documentos.
       \item Con el path de acceso a la carpeta donde están todos los documentos
             se utiliza de la clase Directory el método GetFiles que devuelve
             un array de string con los path a cada archivo txt que este guardado
@@ -115,10 +124,10 @@ de la clase Inicio de MoogleEngine, y ahí se comienza a hacer lo siguiente:
             y esto lo hacemos utilizando el método ToTextDivide de la clase ModVec.
       \item Con el método ToTF de la clase ModVec, creamos un Diccionario de
             $<$string,Diccionario$<$string, double$>$$>$ donde guardamos\\
-            $<$nombre del documento,$<$palabras del documento, TF de cada palabra en el documento$>$.\\
+            $<$nombre del documento,$<$palabras del documento, TF de cada pa-labra en el documento$>$.\\
 
                   La fórmula que usamos para calcular el TF de una palabra
-                  en un documento es
+                  en un do-cumento es
             $TF_{palabra}=\frac{Freq}{MaxFreq}$;\\
             Freq = las veces que aparece la palabra en el documento;\\
             MaxFreq = la frecuencia de la palabra que más veces aparece en el documento;\\
@@ -136,8 +145,8 @@ de la clase Inicio de MoogleEngine, y ahí se comienza a hacer lo siguiente:
       \item Para calcular el IDF usamos la fórmula $\log(\frac{Freq}{Length})$\\
             Freq = Cantidad de documentos en los que aparece esa palabra\\
             Length = Total de documentos\\
-            Cuando una palabra aparezca en muchos documentos su valor de IDF va a estar más
-            cerca de 1 y $\log(1)$ va a estar más cerca de cero entonces, y su valor de IDF va a
+            Cuando una palabra aparezca en muchos documentos, su valor de IDF va a estar más
+            cerca de 1 y $\log(1)$ va a estar más cerca de cero, por tanto, su valor de IDF va a
             ser menor mientras aparezca en más documentos.
             El IDF lo calculamos con el método ToIDF de la clase ModVec, que recibe
             el Diccionario
@@ -151,21 +160,23 @@ de la clase Inicio de MoogleEngine, y ahí se comienza a hacer lo siguiente:
             y en caso de no tenerla agrega la palabra, y le pone como frecuencia 1.
             Después vuelve a iterar por cada palabra, dividiendo cada frecuencia por el total
             de documentos y calculando el logaritmo de esa división, dejando creado un
-            diccionario con los valores TF de cada palabra.
-            Ya teniendo ambos diccionarios TF e IDF, con el método ToTF\_IDF de la clase ModVec,
-            calculamos el TF\_IDF que no es más que el producto del valor TF de cada palabra
-            en el documento, por el valor IDF de la palabra. Este método recibe ambos diccionarios y
-            devuelve un nuevo Diccionario de $<$string,<string,double$>>$ que contiene
-            $<$nombre del documento,$<$palabra, TF\_IDF de la palabra en ese documento$>>$,
-            y lo que hace es ir iterando por cada documento del diccionario TF, y por cada documento
+            diccionario con los valores TF de cada palabra.\\
+            Ya teniendo ambos diccionarios TF e IDF, con el método ToTF\_IDF de la clase ModVec
+            calculamos el TF\_IDF, que no es más que el producto del valor TF de cada palabra
+            en el documento, por el valor IDF de la palabra. Este es un método void que
+            recibe ambos diccionarios el de TF y el de IDF, y modifica el valor del TF de cada
+            palabra en el diccionario\\
+            $<$nombre del documento,$<$palabras del documento, TF de cada palabra en el documento$>>$
+            por el valor de TF\_IDF, y lo que hace es ir iterando por cada documento del
+            diccionario TF, y por cada documento
             va iterando por todas las palabras del IDF, verificando si están en el documento,
             en caso de estarlo multiplican el valor TF*IDF de esa palabra y ya guardan en ese
             valor como TF\_IDF, en caso de no estarlo es porque la palabra no aparece en el documento,
             por tanto su TF es 0, y al multiplicarlo anularía todo el resultado, por tanto se
-            pone directamente que el valor TF\_IDF de esa palabra en ese documento es 0.
+            pone directamente que el valor TF\_IDF de esa palabra en ese documento es 0.\\
             Aquí se termina de ejecutar el método Main, y posteriormente aparece la página del Moogle
             donde el usuario puede hacer sus búsquedas, al hacer una búsqueda se comienza a ejecutar
-            el método Query de la clase Moogle, que debe dar como resultado los documentos a mostrar y
+            el método Query de la clase Moogle, que da como resultado los documentos a mostrar y
             las sugerencias.
 
       \item Con el diccionario de TF\_IDF solo nos quedaría trabajar con la query para hacer la
@@ -173,18 +184,18 @@ de la clase Inicio de MoogleEngine, y ahí se comienza a hacer lo siguiente:
             coseno hacer un sistema de scores que represente la relevancia de
             cada documento con respecto a la query.
             \begin{itemize}
-                  \item  Primeramente para hacer la sugerencia, trabajamos con la query que
+                  \item Primeramente para hacer la sugerencia, trabajamos con la query que
                         se recibe en un string.
-                  \item con el método DivideQuery de la clase búsqueda,
+                  \item Con el método \textbf{DivideQuery} de la clase búsqueda,
                         convertimos todas las palabras de la query a minúsculas, y guardamos en un array
                         la query con todas las palabras divididas.
-                  \item Después con el método Clean de la clase Búsqueda,
+                  \item Después con el método \textbf{Clean} de la clase Búsqueda,
                         creamos un array de la query nuevo, con las palabras divididas y
                         sin los signos de puntuación, pero con los operadores.
-                  \item Después con el método LowerString de la clase Búsqueda,
+                  \item Después con el método \textbf{LowerString} de la clase Búsqueda,
                         creamos un array nuevo con las palabras del array anterior pero
                         con todas las palabras sin los operadores.
-                  \item Después con el método SearchTheOne de la clase Búsqueda
+                  \item Después con el método \textbf{SearchTheOne} de la clase Búsqueda
                         donde creamos un nuevo array con las palabras de la query
                         como el creado anteriormente, vamos verificando
 
@@ -203,7 +214,7 @@ de la clase Inicio de MoogleEngine, y ahí se comienza a hacer lo siguiente:
 
 
                         \end{itemize}
-                  \item Después con el método Change de la clase Búsqueda,
+                  \item Después con el método \textbf{Change} de la clase Búsqueda,
                         vamos iterando por cada palabra del array creado por SearchTheOne si es diferente
                         a la palabra creada por el método LowerSTring, significa que la palabra
                         cambio al aplicar la Levenshtein, en ese caso con el método Replace de la clase
@@ -211,33 +222,45 @@ de la clase Inicio de MoogleEngine, y ahí se comienza a hacer lo siguiente:
                         con signos de puntuación, y cambiamos la palabra vieja por la nueva, y al final
                         con Split volvemos a unir todo el array de palabras ya modificado y esa es la
                         sugerencia\\
-                        Después con el método ToTFQuery de la clase ModVec calculamos el
+                        Después con el método \textbf{ToTFQuery} de la clase ModVec calculamos el
                         tf de la palabra, con la misma fórmula vista anteriormente $\frac{Freq}{MaxFreq}$,
                         y lo hacemos a partir del array de palabras de la query que no ha
                         sido modificado por la levenshtein, contamos las veces que aparece
                         cada palabra, buscamos la frecuencia mayor y las dividimos,
                         y guardamos un diccionario de $<$string, double$>$,
                         con $<$palabras, tf de cada palabra$>$\\
-                        Posteriormente con el método ToQueryTF\_IDF de la clase ModVec
+                        Posteriormente con el método \textbf{ToQueryTF\_IDF} de la clase ModVec
                         creamos un diccionario de $<$string, double$>$ que contiene
                         $<$palabras de la query, peso de la palabra$>$ y se calcula su el peso de
                         cada palabra con la fórmula
-                        (a+(1-a)*TF de la palabra)*IDF de la palabra , Donde a = 0,5;\\
+                        (a+(1-a)*TF de la palabra)*IDF de la palabra , donde a = 0,5;\\
                         Entonces lo que hace este método es ir iterando por el diccionario de
                         $<$palabras, IDF de la palabra$>$ creado anteriormente para los documentos ,
-                        si la palabra aparece en el diccionario de <palabras de la query, tf de la palabra>,
-                        aplicamos la formula anterior y la agregamos con ese valor de peso, en caso de no aparecer
+                        si la palabra aparece en el diccionario de\\
+                        $<$palabras de la query, tf de la palabra$>$,
+                        aplicamos la fórmula anterior y la agregamos con ese valor de peso, en caso de no aparecer
                         en el diccionario de palabras de la query le ponemos como valor 0, de esta manera
                         si hay alguna palabra en la query que no aparezca en ningún documento es obviada.\\
-                        Después se ejecuta el método SearchScore de la clase ModVec,
+                        Después se ejecuta el método \textbf{SearchScore} de la clase ModVec,
                         que crea un diccionario de $<$Documentos, peso del documento$>$ \\
-                        Para el Score utilizamos la fórmula de similitud de coseno, que busca la similitud
+                        Para el calcular el score utilizamos la fórmula de similitud de coseno, que busca la similitud
                         entre el vector de palabras de cada documento, y el vector de palabras de la query,
                         con la fórmula\\
-                        Numerador = Sumatoria del producto del peso de la palabra en la query por el peso de
-                        la palabra en el documento\\
-                        Denominador = Raíz cuadrada de Sumatoria A por Raíz cuadrada de Sumatoria B.\\
-                        Sumatoria A = Sumatoria de los cuadrados de los pesos de cada palabra de la query\\
+                        $W_{iq} \rightarrow$ Peso de la palabra i en la query\\
+                        $W_{iq} \rightarrow$ Peso de la misma palabra i, en el documento j\\
+                        
+                        \quad
+                        {
+                        \vspace{0.1cm}
+                        \begin{center}
+                              {\LARGE$\frac{\sum_{i=1}^{n} W_{i,j} \times W_{iq}}{\sqrt{\sum_{i=1}^{n} W_{i,j}^2} \times \sqrt{\sum_{i=1}^{n} W_{iq}^2}}$}
+                        \end{center}
+                        \vspace{0.5cm}
+                        }
+                        \quad\\
+                        Numerador = Sumatoria de: EL producto del peso de cada palabra en el documento
+                        por el peso de la misma palabra en la query
+                        Denomindor =
                         Sumatoria B = Sumatoria de los cuadrados de los pesos de cada palabra del documento.\\
                         El método recibe el diccionario de $<$documentos, $<$palabra del documento, tf\_idf de la palabra$>>$\\
                         Y el diccionario de $<$palabras de la query, peso de la palabra$>$\\
@@ -324,23 +347,28 @@ de la clase Inicio de MoogleEngine, y ahí se comienza a hacer lo siguiente:
             \\
             También hay una clase Matrices en la que:\\
 
-            EL método Suma, recibe dos matrices A y B, donde A tiene que tener
-            la misma cantidad de filas y de columnas que tiene B, A y B son matrices de MxN
-            y el método devuelve la suma de A y B\\
-            EL método Resta, recibe dos matrices A y B, donde A tiene que tener la
-            misma cantidad de filas y de columnas que tiene B, A y B son matrices de MxN y
-            el método devuelve la resta de A y B\\
-            EL método Producto, recibe dos matrices A y B, donde A tiene que tener la misma
-            cantidad de columnas que filas tiene B, A es una matriz de MxN y B es una matriz
-            de NxK y el método devuelve el producto de A y B.\\
-            Para el producto de una matriz por un vector, se puede utilizar este mismo método,
-            donde A sería una matriz de MxN y el vector tendría que cumplir ser una matriz
-            de NX1\\
-            En caso de no cumplirse las condiciones necesarias para realizar la suma, resta y
-            la multiplicación, cada método devolverá una matriz nula de 1x1\\
-            También está el método ProductoWithScalar,
-            que recibe un escalar y una matriz, y realiza el producto de un escalar por una
-            matriz.\\
+            \begin{itemize}
+                  \item El método \textbf{Suma}, recibe dos matrices A y B, donde A tiene que tener
+                        la misma cantidad de filas y de columnas que tiene B, A y B son matrices de MxN
+                        y el método devuelve la suma de A y B
+
+                  \item El método \textbf{Resta}, recibe dos matrices A y B, donde A tiene que tener la
+                        misma cantidad de filas y de columnas que tiene B, A y B son matrices de MxN y
+                        el método devuelve la resta de A y B
+
+                  \item El método \textbf{Producto}, recibe dos matrices A y B, donde A tiene que tener la misma
+                        cantidad de columnas que filas tiene B, A es una matriz de MxN y B es una matriz
+                        de NxK y el método devuelve el producto de A y B.\\
+                        Para el producto de una matriz por un vector, se puede utilizar este mismo método,
+                        donde A sería una matriz de MxN y el vector tendría que cumplir ser una matriz
+                        de NX1\\
+                        En caso de no cumplirse las condiciones necesarias para realizar la suma, resta y
+                        la multiplicación, cada método devolverá una matriz nula de 1x1\\
+                        También está el método ProductoWithScalar,
+                        que recibe un escalar y una matriz, y realiza el producto de un escalar por una
+                        matriz.
+
+            \end{itemize}
 
 
 
