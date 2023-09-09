@@ -22,22 +22,16 @@ public static class Moogle
         // le quitamos los signos de puntuacion, despues le quitamos los operadores, despues lo comparamos con la distancia levenshtein
         // Si antes de la distancia levenshtein esta palabra es distinta a la palabra despues de la levenshtein, 
         //cambio la palabra de antes de la distancia por la de despues de la distancia en la que tiene signos de puntuacion
-        //
-
 
         string[] LowerQueryWithout = Busqueda.LowerString(QueryWithout);
         //Un array con todas las palabras del query sin operadores y en minuscula
-
 
         string[] QueryClean = Busqueda.SearchTheOne(LowerQueryWithout, Inicio.DocumentIDF);
         //Este es un array con las palabras que no se encontraban en el IDF sustituidas por la palabra que menor distancia levenshtein tenga
         //con respecto a las palabras del IDF
 
-
         string suggestion = Busqueda.Change(QueryDividido, LowerQueryWithout, QueryClean);
         //Aqui se guarda la sugerencia, que seria la query con las palabras mal escritas o que el no encontro cambiadas
-
-
 
         Dictionary<string, double> QueryTF = ModVec.ToQueryTF(LowerQueryWithout);
         //QueryTF es un diccionario de <palabras del query,TF de la palabra>
@@ -45,21 +39,12 @@ public static class Moogle
         Dictionary<string, double> QueryTF_IDF = ModVec.toQueryTF_IDF(QueryTF, Inicio.DocumentIDF);
         //QueryTF_IDF es un diccionario de <palabras, valor TF_IDF de cada palabra>
 
-
-
         Dictionary<string, double> DocScores = ModVec.SearchScores(QueryTF_IDF, Inicio.DocumentTF_IDF);
         //DocScores es un diccionario de <nombre de documentos, score>
         //Hay que arreglar en la similitud que si el denominador es 0, el score es 0
 
-
-
-
-
-
         Dictionary<string, double> DocScoresClean = Ops.CleanDocs(Inicio.DocumentTF_IDF, QueryDividido, QueryClean, DocScores, Inicio.DocumentoDividido);
         //Resultados modificados segun los operadores, ver si se puede cambiar dividequery por QueryDIvidido sin problemas
-
-
 
         List<KeyValuePair<string, double>> SortDocScores = ModVec.SortScores(DocScoresClean);
 
@@ -86,7 +71,7 @@ public static class Moogle
 
         if (QueryDividido.Length != 0 && count == QueryDividido.Length)
         {
-             
+
             if (SortDocScores.Count == 0)
             {
 
@@ -132,7 +117,7 @@ public static class Moogle
 
 
         }
-        
+
         // System.Console.WriteLine("Cantidad de documentos"+SortDocScores[1].Key);
 
 

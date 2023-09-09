@@ -11,18 +11,13 @@ namespace MoogleEngine
             //devuelve un diccionario con <Nombre de documento, Texto de DOcumento> (Documentos)
 
 
-
-
-
-
             string TextName;
             string[] Text;
             string Texto;
             Dictionary<string, string> Documentos = new Dictionary<string, string>();
 
             for (int i = 0; i < paths.Length; i++)
-            {
-                //Este for va recorriendo el array de paths, y por cada path busca el nombre del documento, y guarda el texto del documento concatenado
+            {//Este for va recorriendo el array de paths, y por cada path busca el nombre del documento, y guarda el texto del documento concatenado
 
                 TextName = ToName(paths[i]);
 
@@ -33,23 +28,12 @@ namespace MoogleEngine
                 Texto = string.Join(" ", Text);
                 //Join concatena todos los string de un array de string separandolos por el operador que se defina, en este caso es un espacio
 
-
-
                 Documentos[TextName] = Texto.ToLower();
                 //ToLower es para poner en un string todas las letras en minuscula
 
             }
 
-
-
-            //         foreach (var item in Documentos)
-            // {
-            //     System.Console.WriteLine(item.Key +" : " + item.Value+"       ");
-            // }
-
-
             return Documentos;
-
 
         }
 
@@ -59,19 +43,12 @@ namespace MoogleEngine
 
             //Posicion me guarda la ultima vez que aparece el string   \   , hay que ponerle el @ delante porque \ es un caracter restringido de vsc 
             int posicion = path.LastIndexOf(@"\");
-            //System.Console.WriteLine(posicion);
 
             posicion++;
             //Hay que sumarle 1 a posicion para que empiece despues del caracter \
 
-
-            //System.Console.WriteLine(path);
-            //System.Console.WriteLine(posicion);
-
             int PointPosition = path.LastIndexOf('.');
             //EL largo de la palabra va siempre desde la ultima vez que aparece   \   hasta la ultima vez que aparece   .  
-
-            //System.Console.WriteLine(PointPosition);
 
             //EL metodo substring recibe (posicion de donde empieza el substring, largo del texto que va a guardar)
             //Y devuelve un string que empieza en la posicion y tiene ese largo
@@ -90,24 +67,13 @@ namespace MoogleEngine
 
             string[] texto;
 
-
             foreach (var item in LowerText)
             {//Con este foreach vamos iterando por el texto de cada documento para limpiarlo de signos de puntuacion y separar todas las palabras del documento
+
                 texto = RemoveChar(item.Value);
                 DocumentoDividido[item.Key] = texto;
 
             }
-
-            // foreach (var item in DocumentoDividido)
-            // {
-            //     System.Console.WriteLine(item.Key); 
-            //     for (int i = 0; i < item.Value.Length; i++)
-            //     {
-            //         Console.WriteLine("{0}   ,    {1}",i,item.Value[i]);
-
-            //     }
-            // }
-
 
             return DocumentoDividido;
 
@@ -116,14 +82,14 @@ namespace MoogleEngine
 
 
 
-                private static string[] RemoveChar(string full)
+        private static string[] RemoveChar(string full)
         {
             //Metodo para quitar signos de puntuacion y demas caracteres que afectan la comprension por la pc
 
-            full = Regex.Replace(full,@"[^\p{L}\d\s]", "");
+            full = Regex.Replace(full, @"[^\p{L}\d\s]", "");
             //Regex.Replace está remplaxando todos los caracteres que no son \p{L} letras, que no son \d digitos decimales y que no son
             // espacios en blanco \s, por el caracter vacío ""
-            
+
             string[] sinCarac = full.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             //Split divide un string en partes cuando encuentre el caracter "", y con StringSplitOptions.RemoveEmptyEntries
             //hacemos que se omitan las posiciones del array que sean solo espacios en blanco
@@ -157,68 +123,36 @@ namespace MoogleEngine
              // si la palabra no aparece se agrega nueva y se le pone como double 1, porque aparece una vez,
              //Si esa palabra aparece en el diccionario entonces se le suma uno al valor de double 
 
-
                 double max = 0;
                 //Max va a ser el valor de la cantidad de veces que mas se repite una palabra en el documento
-
-
 
                 Dictionary<string, double> Documento = new Dictionary<string, double>();
                 //Documento es un diccionario de <palabras del documento item, veces que se repiten las palabras en el documento>
 
-
                 for (int i = 0; i < item.Value.Length; i++)
                 {
-
-
-
-
                     exist = Documento.ContainsKey(item.Value[i]);
-                    if (exist)
-                    {
-                        Documento[item.Value[i]] = ++Documento[item.Value[i]];
-                    }
-                    else
-                    {
-                        Documento[item.Value[i]] = 1;
-                    }
+
+                    if (exist) Documento[item.Value[i]] = ++Documento[item.Value[i]];
+                    else Documento[item.Value[i]] = 1;
+
                     max = Math.Max(max, Documento[item.Value[i]]);
 
                 }
 
                 //Hay que normalizar el TF, para eso si dividen los valores por la frecuencia mas alta
-                //System.Console.WriteLine("This is the one "+ max);
 
                 foreach (var word in Documento)
                 {
                     Documento[word.Key] = Documento[word.Key] / max;
                 }
 
-
                 DocumentTF[item.Key] = Documento;
                 //Aqui guardo en el documento las palabras y las veces que se repiten en el
 
-
             }
 
-
-
-            //  foreach (var item in DocumentTF)
-            //     {
-            //         Console.WriteLine(item.Key);
-            //             foreach (var word in item.Value)
-            //             {
-            //                 Console.WriteLine(word.Key + " : " + word.Value);
-
-            //             }   
-
-            //         Console.WriteLine("Se acabo el drama");
-            //     }
-
-
-
             return DocumentTF;
-
         }
 
 
@@ -234,13 +168,10 @@ namespace MoogleEngine
             bool exist;
             //Guarda true si la palabra existe en el key del Diccionario
 
-
             Dictionary<string, double> DocumentIDF = new Dictionary<string, double>();
             //DocumentIDF va a ser un diccionario de <palabras, cantidad de documentos donde aparece>
 
-
             double TotalDocs = DocumentTF.Count;
-            // System.Console.WriteLine(TotalDocs);
             // TotalDOcs es la cantidad de documentos que hay, que serian la cantidad de <Key,Value> del Diccionario DocumentTF
 
             foreach (var item in DocumentTF)
@@ -252,20 +183,11 @@ namespace MoogleEngine
                 {
                     exist = DocumentIDF.ContainsKey(word.Key);
 
-                    if (exist)
-                    {
-                        DocumentIDF[word.Key] = ++DocumentIDF[word.Key];
-
-                    }
-                    else
-                    {
-                        DocumentIDF[word.Key] = 1;
-                    }
+                    if (exist) DocumentIDF[word.Key] = ++DocumentIDF[word.Key];
+                    else DocumentIDF[word.Key] = 1;
 
                 }
             }
-
-
 
             foreach (var item in DocumentIDF)
             {
@@ -273,14 +195,7 @@ namespace MoogleEngine
 
             }
 
-            //   foreach (var item in DocumentIDF)
-            // { 
-            //     System.Console.WriteLine(item.Key + " : " + item.Value);
-            // }
-
-
             return DocumentIDF;
-
 
         }
 
@@ -292,19 +207,14 @@ namespace MoogleEngine
         public static void toTF_IDF(Dictionary<string, Dictionary<string, double>> DOcumentTF, Dictionary<string, double> DOcumentIDF)
         {
             //Este metodo recibe un diccionario DOcumentTF con los TF de cada palabra en cada documento, y un diccionario con los IDF
-            //Devuelve un diccionario<nombre de documento,DIccionario<palabras del documento, valores TF_IDF>>
+            //Y convierte el diccionario DOcumentTF es un diccionario<nombre de documento,Diccionario<palabras del documento, valores TF_IDF>>
             //EL TF_IDF es el valor TF de la palabra en ese documento por el valor IDF de esa palabra
-
 
             bool exist;
             //Es una variable bool que va a guardar true si una determinada palabra pertenece
 
-
             double TF;
             double IDF;
-
-
-
 
             foreach (var document in DOcumentTF)
             {//Con este foreach voy iterando por cada documento, y por cada uno creo un diccionario de <palabras, valor TF_IDF> 
@@ -332,17 +242,6 @@ namespace MoogleEngine
 
                 }
             }
-
-
-            // foreach (var item in DOcumentTF_IDF)
-            // {
-            //     System.Console.WriteLine(item.Key);
-            //     foreach (var word in item.Value)
-            //     {
-            //         System.Console.WriteLine(word.Key+" : "+word.Value);
-            //     }
-            //     System.Console.WriteLine("Se acabo el drama");
-            // }
         }
 
 
@@ -351,7 +250,7 @@ namespace MoogleEngine
         public static Dictionary<string, double> ToQueryTF(string[] query)
         {
             //Este es un metodo que dada un array de string con las palabras del query, que ya serian las de la sugerencia
-            // me devuelve un diccionario de <palabras del query, TF de la palabra>
+            //me devuelve un diccionario de <palabras del query, TF de la palabra>
 
             Dictionary<string, double> QueryTF = new Dictionary<string, double>();
             //Dicionario de <palabras del query, TF de la palabra>
@@ -367,29 +266,16 @@ namespace MoogleEngine
 
                 exist = QueryTF.ContainsKey(query[i]);
 
-                if (exist)
-                {
-
-                    QueryTF[query[i]] = ++QueryTF[query[i]];
-
-                }
-                else
-                {
-
-                    QueryTF[query[i]] = 1;
-
-                }
+                if (exist) QueryTF[query[i]] = ++QueryTF[query[i]];
+                else QueryTF[query[i]] = 1;
 
             }
-
 
             double max = 0;
             //Max va a ser la mayor cantidad de veces que se repite una palabra
 
-
             foreach (var item in QueryTF)
             {
-
                 max = Math.Max(max, item.Value);
             }
 
@@ -398,15 +284,6 @@ namespace MoogleEngine
             {
                 QueryTF[item.Key] = item.Value / max;
             }
-
-            //    System.Console.WriteLine(max);
-
-            //     foreach (var item in QueryTF)
-            //     {
-            //         System.Console.WriteLine(item.Key + " : " + item.Value);
-            //     }
-
-
 
             return QueryTF;
         }
@@ -421,29 +298,11 @@ namespace MoogleEngine
             Dictionary<string, double> QueryTF_IDF = new Dictionary<string, double>();
             //QueryTF_IDF es un diccionario de <palabras de los documentos, TF_IDF de cada palabra
 
-
-
-            // System.Console.WriteLine("TF");
-            // foreach (var item in QueryTF)
-            // {
-            //     System.Console.WriteLine("{0} : {1}", item.Key,item.Value);
-            // }
-
-            // System.Console.WriteLine("IDF");
-            // foreach (var item in DocumentIDF)
-            // {
-            //     System.Console.WriteLine("{0} : {1}", item.Key,item.Value);
-            // }
-
-
-
-
-
             bool exist;
-
             double TF;
             double IDF;
             double a = 0.5;
+
             foreach (var word in DocumentIDF)
             {
                 //Con este for voy recorriendo el array de palabras del Diccionario IDF, en caso de no aparecer la palabra quiere decir 
@@ -451,25 +310,17 @@ namespace MoogleEngine
                 //su peso por la formula (a+(1-a)*TF)*IDF donde a es un valor entre 0,4 y 0,5 
 
                 exist = QueryTF.ContainsKey(word.Key);
-                if (!exist)
-                {
-                    //SI la palabra no existe
-                    QueryTF_IDF[word.Key] = 0;
-                }
+
+                //SI la palabra no existe
+                if (!exist) QueryTF_IDF[word.Key] = 0;
                 else
                 {
-                    // System.Console.WriteLine(a);
                     TF = QueryTF[word.Key];
                     IDF = word.Value;
                     QueryTF_IDF[word.Key] = (a + (1 - a) * TF) * IDF;
                 }
 
             }
-
-            // foreach (var item in QueryTF_IDF)
-            // {
-            //     System.Console.WriteLine(item.Key +" : "+ item.Value);
-            // }
 
             return QueryTF_IDF;
         }
@@ -487,19 +338,9 @@ namespace MoogleEngine
             {//Este foreach va recorriendo cada documento y va calculando la similitud en tre las palabras de ese documento y las palabras de la query
              //Y esa similitud es el score
 
-
                 DocScores[doc.Key] = CosineSImilitude(QueryTF_IDF, doc.Value);
+
             }
-
-
-
-            // foreach(var doc in DocScores){
-
-            //     System.Console.WriteLine(doc.Key + " : " + doc.Value);
-
-            // }
-
-
 
             return DocScores;
         }
@@ -530,14 +371,7 @@ namespace MoogleEngine
                 //Tambien voy calculando el cuadrado de cada peso de la query y se lo sumo al cuadrado del peso de la siguiente palabra de la query y asi ...
                 //voy calculando el cuadrado de cada peso del documento y se lo sumo al cuadrado del peso de la siguiente palabra del documento y asi ...
 
-
-                // System.Console.WriteLine("queryTF_IDF  "+ wordQuery.Value );
-                // System.Console.WriteLine("documentTF_IDF  " + DocumentTF_IDF[wordQuery.Key]);
-
-
-
                 numeradorProducto = wordQuery.Value * DocumentTF_IDF[wordQuery.Key];
-                // System.Console.WriteLine(wordQuery.Key + " : " + numeradorProducto);
                 numerador += numeradorProducto;
 
                 AddPowerQuery = Math.Pow(wordQuery.Value, 2);
@@ -548,19 +382,17 @@ namespace MoogleEngine
             }
 
             double denominador = Math.Sqrt(PowerQuery) * Math.Sqrt(PowerDocument);
-
             double Similitude;
 
             if (denominador == 0)
             {
                 Similitude = 0;
                 return Similitude;
-
             }
 
             Similitude = numerador / denominador;
-
             return Similitude;
+
         }
 
 
@@ -582,19 +414,9 @@ namespace MoogleEngine
 
             }
 
-            // for (int i = 0; i < ordered.Count; i++)
-            // {
-            //     System.Console.WriteLine(ordered[i]);
-            // }
-
-
             return ordered;
 
         }
-
-
-
-
 
     }
 }

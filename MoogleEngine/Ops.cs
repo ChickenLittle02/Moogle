@@ -18,10 +18,8 @@ namespace MoogleEngine
             {
                 //Este for va recorriendo las palabras del query y verificando la existencia de los operadores
 
-
-
-            //Operador ! es el operador que indica que esa palabra no debe aparecer en ningun documento
-            //Ejemplo algoritmo !ordenacion, la palabra ordenacion no debe aparecer en ningun documento
+                //Operador ! es el operador que indica que esa palabra no debe aparecer en ningun documento
+                //Ejemplo algoritmo !ordenacion, la palabra ordenacion no debe aparecer en ningun documento
                 if (QueryDividido[i].StartsWith("!"))
                 {
                     //Aqui me verifica si el operador ! existe en alguna palabra, si existe entro al foreach
@@ -45,7 +43,7 @@ namespace MoogleEngine
                 }
 
 
-            //Operador ^ es el operador que indica que esa palabra tiene que aparecer en todos los documentos devueltos 
+                //Operador ^ es el operador que indica que esa palabra tiene que aparecer en todos los documentos devueltos 
                 if (QueryDividido[i].StartsWith("^"))
                 {
                     //Aqui me verifica si el operador ^ existe delante de alguna palabra, si existe entro al foreach
@@ -103,19 +101,19 @@ namespace MoogleEngine
                 {
 
 
-                    if (i == 0) break;                    
+                    if (i == 0) break;
                     //EN este caso seria la primera palabra, y no tiene ninguna palabra anterior para verificar
 
-                    
+
 
                     foreach (var doc in DocScores)
                     {
                         if (DocumentTF[doc.Key].ContainsKey(QueryClean[i]) & DocumentTF[doc.Key].ContainsKey(QueryClean[i - 1]))
                         {
                             double distancia = distance(QueryClean[i], QueryClean[i - 1], DocumentoDividido[doc.Key]);
-                            System.Console.WriteLine("La distancia es "+distancia);
+                            System.Console.WriteLine("La distancia es " + distancia);
 
-                            if (distancia == 0)     DocScores[doc.Key] = 1 + DocScores[doc.Key];
+                            if (distancia == 0) DocScores[doc.Key] = 1 + DocScores[doc.Key];
 
                             else
                             {
@@ -136,59 +134,62 @@ namespace MoogleEngine
 
         }
 
-static int distance(string p1, string p2, string[] words)
-{
-
-    bool primero = true;
-    int position = 0;
-
-    for (int i = 0; i < words.Length; i++)
-    {
-        if (words[i] == p1)
-        {
-            position = i;
-            break;
-        }
-        else if (words[i] == p2)
+        static int distance(string p1, string p2, string[] words)
         {
 
-            string temp = p1;
-            p1 = p2;
-            p2 = temp;
+            bool primero = true;
+            int position = 0;
 
-            primero = false;
-                        position = i;
-            
-            break;
+            for (int i = 0; i < words.Length; i++)
+            {
+                if (words[i] == p1)
+                {
+                    position = i;
+                    break;
+                }
+                else if (words[i] == p2)
+                {
+
+                    string temp = p1;
+                    p1 = p2;
+                    p2 = temp;
+
+                    primero = false;
+                    position = i;
+
+                    break;
+                }
+
+            }
+
+            int distance = int.MaxValue;
+            int positionP1 = position;
+            int positionP2 = 0;
+
+
+            for (int i = position; i < words.Length; i++)
+            {
+                if (words[i] == p2)
+                {
+                    positionP2 = i;
+                    distance = Math.Min(positionP2 - positionP1, distance);
+
+                    string temp = p1;
+                    p1 = p2;
+                    p2 = temp;
+                    positionP1 = positionP2;
+
+                }
+                else if (words[i] == p1)
+                {
+                    positionP1 = i;
+                }
+
+            }
+
+            return distance; //El -1 es para que me queden las cantidades exactas de palabras de diferencias
+
         }
-
-    }
-
-    int distance = int.MaxValue;
-    int positionP1 = position;
-    int positionP2 = 0;
-    
-
-    for(int i = position; i<words.Length; i++){
-        if(words[i]==p2){
-            positionP2 = i;
-            distance = Math.Min(positionP2-positionP1, distance);
-            
-            string temp = p1;
-            p1 = p2;
-            p2 = temp;
-            positionP1 = positionP2;
-
-        }
-        else if(words[i]==p1){
-            positionP1=i;
-        }
-
-    }
-
-    return distance; //El -1 es para que me queden las cantidades exactas de palabras de diferencias
-
-}
 
         private static int distance(string[] texto, string palabra1, string palabra2)
         {
@@ -196,7 +197,7 @@ static int distance(string p1, string p2, string[] words)
             //Ver que pasa en el caso de que la palabra este a continuacion de la otra(en ese caso la distancia seria 0 y entonces
             //ese documento tendria mas impostancia      
 
-            if (palabra1.Equals(palabra2))  return 0;
+            if (palabra1.Equals(palabra2)) return 0;
 
             int min_dist = (texto.Length) + 1;
             //Como la maxima distancia mayor entre dos palabras es el length + 1

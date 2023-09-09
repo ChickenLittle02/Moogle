@@ -16,7 +16,7 @@ namespace MoogleEngine
 
 
 
-            string folder = Path.Join(@"..","Content");
+            string folder = Path.Join(@"..", "Content");
 
             //Aqui recibo donde se encuentra mi proyecto que estoy ejecutando, con .. sale de la carpeta donde esta corriendo el proyecto
             //Y despues entra a la carpeta Content
@@ -36,10 +36,10 @@ namespace MoogleEngine
             //DocumentoDividido es un diccionario de <nombre de documento, Palabras del documento dividido>
 
             Inicio.DocumentTF_IDF = MoogleEngine.ModVec.toTF(DocumentoDividido);
-            //DOcument TF es un diccionario de <nombre de documento,DIccionario<palabras del documento,Veces que se repite la palabra en el documento>>
+            //DOcument TF es un diccionario de <nombre de documento,Diccionario<palabras del documento,Veces que se repite la palabra en el documento>>
 
             Inicio.DocumentIDF = MoogleEngine.ModVec.toIDF(DocumentTF_IDF);
-            //DOcumentIDF es un diccionario de <palabras, cantidad de documentos en que aparece>
+            //DocumentIDF es un diccionario de <palabras, cantidad de documentos en que aparece>
             // System.Console.WriteLine("DocumentIDF    "+ DocumentIDF.Count);
 
             MoogleEngine.ModVec.toTF_IDF(DocumentTF_IDF, DocumentIDF);
