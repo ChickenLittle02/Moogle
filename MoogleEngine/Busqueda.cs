@@ -8,14 +8,48 @@ namespace MoogleEngine
         {
             //Este metodo recibe la query y devuelve un array de string
             //con las palabras divididas y sin los signos de puntuacion menos los operadores
-
+            System.Console.WriteLine(query);
             string LowerText = query.ToLower();
             string space = " ";
+
+            for(int i=0; i<query.Length; i++)
+            {
+                if(query[i]=='~'){
+                    if(i==query.Length-1){
+                        query = CopyQuery(query,i);
+                    }else if(query[i+1]!=' '){
+                        query = CopyQuery(query,i);
+                    }
+                }
+            }
+            
+            query = Regex.Replace(query, "~ ", "~");
+
+            System.Console.WriteLine(query);
 
             string[] sinCarac = LowerText.Split(space, StringSplitOptions.RemoveEmptyEntries);
             //Aqui divide el string query en palabras segun los espacios
 
             return sinCarac;
+        }
+
+        public static string CopyQuery(string query, int i){
+            string query_COpy = "";
+            if(i==query.Length-1){
+                for(int j = 0; j<query.Length-1;j++){
+                    query_COpy+= query[j];
+                }
+            }else{
+                for(int j = 0; j<query.Length;j++){
+
+                    if(j!=i){
+                    query_COpy+= query[j];
+                    }
+                }
+                
+            }
+
+            return query_COpy;
         }
 
 
@@ -25,6 +59,8 @@ namespace MoogleEngine
             //\p{L} letras, \d digitos, \s espacios en blanco, y distintos de los operadores ^, !, ~, *
 
             string[] Without = new string[query.Length];
+
+
 
             for (int i = 0; i < Without.Length; i++)
             {

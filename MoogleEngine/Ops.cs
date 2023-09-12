@@ -109,18 +109,26 @@ namespace MoogleEngine
                     foreach (var doc in DocScores)
                     {
                         if (DocumentTF[doc.Key].ContainsKey(QueryClean[i]) & DocumentTF[doc.Key].ContainsKey(QueryClean[i - 1]))
-                        {
-                            double distancia = distance(QueryClean[i], QueryClean[i - 1], DocumentoDividido[doc.Key]);
-                            System.Console.WriteLine("La distancia es " + distancia);
-
-                            if (distancia == 0) DocScores[doc.Key] = 1 + DocScores[doc.Key];
-
-                            else
+                        {System.Console.WriteLine(DocumentTF[doc.Key][QueryClean[i]]);
+                        System.Console.WriteLine(DocumentTF[doc.Key][QueryClean[i - 1]]);
+                            if (DocumentTF[doc.Key][QueryClean[i]] != 0 & DocumentTF[doc.Key][QueryClean[i - 1]] != 0)
                             {
-                                distancia = 1 / distancia;
-                                DocScores[doc.Key] = distancia + DocScores[doc.Key];
-                            }
+                                Show(DocumentTF);
+                                System.Console.WriteLine(doc.Key);
+                                System.Console.WriteLine("Contiene " + DocumentTF[doc.Key].ContainsKey(QueryClean[i]) + "  en " + QueryClean[i]);
+                                System.Console.WriteLine("Contiene " + DocumentTF[doc.Key].ContainsKey(QueryClean[i - 1]) + "  en " + QueryClean[i - 1]);
+                                double distancia = distance(QueryClean[i], QueryClean[i - 1], DocumentoDividido[doc.Key]);
+                                System.Console.WriteLine("La distancia es " + distancia);
 
+                                if (distancia == 0) DocScores[doc.Key] = 1 + DocScores[doc.Key];
+
+                                else
+                                {
+                                    distancia = 1 / distancia;
+                                    DocScores[doc.Key] = distancia + DocScores[doc.Key];
+                                }
+
+                            }
                         }
                     }
                     continue;
@@ -133,15 +141,31 @@ namespace MoogleEngine
             return DocScores;
 
         }
+        static void Show(Dictionary<string, Dictionary<string, double>> DIccionario)
+        {
+            foreach (var item in DIccionario)
+            {
+                System.Console.WriteLine(item.Key);
+                foreach (var word in item.Value)
+                {
+                    System.Console.WriteLine(word);
+                }
+            }
+        }
 
         static int distance(string p1, string p2, string[] words)
-        {
+        {//Este metodo recibe dos palabras y un array de palabras, y calcula la cantidad de palabras entre esas dos palabras
 
             bool primero = true;
+            //La variable primero existe para determinar si la primera palabr que aparece es p1, en ese caso se queda con valor true
+            //o P2 en ese caso toma valor false
             int position = 0;
 
             for (int i = 0; i < words.Length; i++)
-            {
+            {//COn este for itero por el array de palabras hasta encontrar p1 o p2, y guardar la posicion,
+             //Si primero aparece P1 solo gurdo la posicion, pero si es P2, guardo la posicion y digo que ahora P1 es P2, y P2 P1, porque
+             //la primera palabra que aparece es P2.
+
                 if (words[i] == p1)
                 {
                     position = i;
@@ -168,7 +192,11 @@ namespace MoogleEngine
 
 
             for (int i = position; i < words.Length; i++)
-            {
+            {//Con este for voy calculando las distancias, si me encuentro la palabra P2, calculo la distancia y en distance guardo la
+             //Menor distancia entre la que tenia guardada y la acabada de calcular, y entonces vuelvo a cambiar P2 por P1, y P1 por P2 porque
+             //ahora volveria a calcular la distancia solo cuando me encuentre la otra palabra 
+             //SI me encuentro la palabra p1 entonces cambio la posicion de P1, y sigo
+
                 if (words[i] == p2)
                 {
                     positionP2 = i;
@@ -186,8 +214,10 @@ namespace MoogleEngine
                 }
 
             }
+            distance--;
 
-            return distance; //El -1 es para que me queden las cantidades exactas de palabras de diferencias
+            System.Console.WriteLine("La distancia entre " + p1 + "   " + p2 + "  es  " + distance);
+            return distance;
 
         }
 
