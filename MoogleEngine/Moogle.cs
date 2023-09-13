@@ -16,9 +16,6 @@ public static class Moogle
     }
     public static SearchResult Query(string query)
     {
-
-
-
         string[] QueryDividido = Busqueda.DivideQuery(query);
         //El query dividido y en minuscula, pero con signos de puntuacion y con operadores
         Show(QueryDividido);
@@ -63,11 +60,7 @@ public static class Moogle
 
         foreach (var word in QueryDividido)
         {
-            if (word.StartsWith("!"))
-            {
-                count++;
-            }
-
+            if (word.StartsWith("!"))   count++;
         }
 
         SearchItem[] items;
@@ -87,7 +80,6 @@ public static class Moogle
                     new SearchItem("", "No hay resultados para su busqueda",0)
                 };
 
-
                 return new SearchResult(items, suggestion);
 
             }
@@ -97,10 +89,7 @@ public static class Moogle
 
                 for (int i = 0; i < SortDocScores.Count; i++)
                 {
-
                     items[i] = new SearchItem(SortDocScores[i].Key, NotContainSnip(SortDocScores[i].Key, Inicio.dirFile, LowerQueryWithout), SortDocScores[i].Value);
-
-
                 }
 
                 return new SearchResult(items, suggestion);
@@ -111,13 +100,8 @@ public static class Moogle
 
                 for (int i = 0; i < 5; i++)
                 {
-
                     items[i] = new SearchItem(SortDocScores[i].Key, NotContainSnip(SortDocScores[i].Key, Inicio.dirFile, LowerQueryWithout), SortDocScores[i].Value);
-
-
                 }
-
-
 
                 return new SearchResult(items, suggestion);
 
@@ -126,15 +110,10 @@ public static class Moogle
 
         }
 
-        // System.Console.WriteLine("Cantidad de documentos"+SortDocScores[1].Key);
-
-
-
         double cantDoc = SortDocScores.Count;
 
         //Hay que eliminar los que tengan score 0
         SortDocScores = delete0(SortDocScores);
-
 
         if (SortDocScores.Count == 0)
         {
@@ -143,8 +122,6 @@ public static class Moogle
                     new SearchItem("", "No hay resultados para su busqueda",0)
                 };
 
-
-
             return new SearchResult(items, suggestion);
 
         }
@@ -152,18 +129,10 @@ public static class Moogle
         {
             items = new SearchItem[SortDocScores.Count];
 
-
-
             for (int i = 0; i < SortDocScores.Count; i++)
             {
-
                 items[i] = new SearchItem(SortDocScores[i].Key, Snip(SortDocScores[i].Key, Inicio.dirFile, QueryTF_IDF), SortDocScores[i].Value);
-
-
             }
-
-
-
 
             return new SearchResult(items, suggestion);
         }
@@ -173,19 +142,11 @@ public static class Moogle
 
             for (int i = 0; i < 5; i++)
             {
-
                 items[i] = new SearchItem(SortDocScores[i].Key, Snip(SortDocScores[i].Key, Inicio.dirFile, QueryTF_IDF), SortDocScores[i].Value);
-
-
             }
 
-
-
             return new SearchResult(items, suggestion);
-
         }
-
-
     }
 
     public static string Snip(string NameDoc, string[] dirFile, Dictionary<string, double> QueryTF_IDF)
@@ -227,9 +188,7 @@ public static class Moogle
             snip = "";
         }
 
-
         return snip;
-
 
     }
 
@@ -237,7 +196,6 @@ public static class Moogle
     {
         string[] texto = new string[0];
         string snip = "";
-
 
         foreach (var item in dirFile)
         {

@@ -8,7 +8,6 @@ namespace MoogleEngine
         {
             //Este metodo recibe la query y devuelve un array de string
             //con las palabras divididas y sin los signos de puntuacion menos los operadores
-            System.Console.WriteLine(query);
             for(int i=0; i<query.Length; i++)
             {
                 if(query[i]=='~'){
@@ -24,8 +23,6 @@ namespace MoogleEngine
             
             string LowerText = query.ToLower();
             string space = " ";
-            System.Console.WriteLine(LowerText);
-
             string[] sinCarac = LowerText.Split(space, StringSplitOptions.RemoveEmptyEntries);
             //Aqui divide el string query en palabras segun los espacios
 
@@ -59,8 +56,6 @@ namespace MoogleEngine
 
             string[] Without = new string[query.Length];
 
-
-
             for (int i = 0; i < Without.Length; i++)
             {
                 //Este for me va iterando por cada posicion del array query y me va guardando en cada posición 
@@ -83,7 +78,6 @@ namespace MoogleEngine
             for (int i = 0; i < Without.Length; i++)
             {
                 //Este for me va iterando por cada posicion del array, y me remplaza por cada palabra los operadores por ""
-
                 Without[i] = Regex.Replace(DivideQuery[i], @"[!~^*]", "");
 
             }
@@ -148,10 +142,8 @@ namespace MoogleEngine
                 {
                     distanciaFavorita = distancia;
                     Favorita = palabra.Key;
-
                 }
             }
-
 
             return Favorita;
 

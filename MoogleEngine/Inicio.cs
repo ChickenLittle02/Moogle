@@ -13,21 +13,14 @@ namespace MoogleEngine
  
         public static void Main()
         {
-
-
-
             string folder = Path.Join(@"..", "Content");
-
             //Aqui recibo donde se encuentra mi proyecto que estoy ejecutando, con .. sale de la carpeta donde esta corriendo el proyecto
             //Y despues entra a la carpeta Content
 
-
-            // System.Console.WriteLine("folder cambiada    "+folder);
             Inicio.dirFile = Directory.GetFiles(folder, "*.txt");
             //dirFile: matriz con los directorios para llegar a cada archivo ejemplo: /Content/habla.txt
             //GetFIles guarda en un array de string los path de acceso a cada archivo, en este caso
             //solo a los .txt porque son los que nos interesan 
-
 
             Dictionary<string, string> DocumentoInicial = MoogleEngine.ModVec.DocText(dirFile);
             //DocumentoInicial es un diccionario de <nombre de documento, Texto del documento>

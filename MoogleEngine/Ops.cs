@@ -89,8 +89,6 @@ namespace MoogleEngine
                             //EN el diccionario de <documentos,score> el score lo multiplico por count
 
                             DocScores[doc.Key] = DocScores[doc.Key] * count;
-
-
                         }
                     }
 
@@ -107,7 +105,6 @@ namespace MoogleEngine
                     {
                         if (DocumentTF[doc.Key].ContainsKey(QueryClean[i]) & DocumentTF[doc.Key].ContainsKey(QueryClean[i - 1]))
                         {
-                                Show(DocumentTF);
                                 double distancia = distance(QueryClean[i], QueryClean[i - 1], DocumentoDividido[doc.Key]);
 
 
@@ -205,8 +202,8 @@ namespace MoogleEngine
 
             }
             distance--;
+            if(distance==-1) return 0; //este es en el caso en que esta buscando la misma palabra, p1==p2
 
-            System.Console.WriteLine("La distancia entre " + p1 + "   " + p2 + "  es  " + distance);
             return distance;
 
         }

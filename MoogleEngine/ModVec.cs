@@ -235,12 +235,7 @@ namespace MoogleEngine
                         TF = document.Value[word.Key];
                         IDF = word.Value;
                         document.Value[word.Key] = TF * IDF;
-
                     }
-                    // else
-                    // {
-                    //     document.Value[word.Key] = 0;
-                    // }
 
                 }
             }
