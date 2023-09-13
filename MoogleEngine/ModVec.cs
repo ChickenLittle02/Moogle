@@ -216,6 +216,8 @@ namespace MoogleEngine
             double TF;
             double IDF;
 
+            Dictionary<string, Dictionary<string, double>> TF_IDF = new Dictionary<string, Dictionary<string, double>>();
+
             foreach (var document in DOcumentTF)
             {//Con este foreach voy iterando por cada documento, y por cada uno creo un diccionario de <palabras, valor TF_IDF> 
              //y despues voy iterando por todos los elementos del IDF y comprobando si estan en las palabras,
@@ -235,10 +237,10 @@ namespace MoogleEngine
                         document.Value[word.Key] = TF * IDF;
 
                     }
-                    else
-                    {
-                        document.Value[word.Key] = 0;
-                    }
+                    // else
+                    // {
+                    //     document.Value[word.Key] = 0;
+                    // }
 
                 }
             }
@@ -339,7 +341,7 @@ namespace MoogleEngine
              //Y esa similitud es el score
 
                 DocScores[doc.Key] = CosineSImilitude(QueryTF_IDF, doc.Value);
-
+                System.Console.WriteLine(doc.Key+"   "+DocScores[doc.Key]);
             }
 
             return DocScores;
@@ -369,16 +371,20 @@ namespace MoogleEngine
                 // Y por cada palabra de la query veo tambien el peso de esa palabra en el documento
                 //Asi calculo el producto de ambos pesos y los voy sumando con los de la siguiente palabra y asi sucesivamente
                 //Tambien voy calculando el cuadrado de cada peso de la query y se lo sumo al cuadrado del peso de la siguiente palabra de la query y asi ...
-                //voy calculando el cuadrado de cada peso del documento y se lo sumo al cuadrado del peso de la siguiente palabra del documento y asi ...
+                //voy calculando el cuadrado de cada  del documento y se lo sumo al cuadrado del peso de la siguiente palabra del documento y asi ...
+                if (DocumentTF_IDF.ContainsKey(wordQuery.Key))
+                {
+                    numeradorProducto = wordQuery.Value * DocumentTF_IDF[wordQuery.Key];
+                    numerador += numeradorProducto;
 
-                numeradorProducto = wordQuery.Value * DocumentTF_IDF[wordQuery.Key];
-                numerador += numeradorProducto;
+
+                    AddPowerDocument = Math.Pow(DocumentTF_IDF[wordQuery.Key], 2);
+                    PowerDocument += AddPowerDocument;
+                }
 
                 AddPowerQuery = Math.Pow(wordQuery.Value, 2);
                 PowerQuery += AddPowerQuery;
 
-                AddPowerDocument = Math.Pow(DocumentTF_IDF[wordQuery.Key], 2);
-                PowerDocument += AddPowerDocument;
             }
 
             double denominador = Math.Sqrt(PowerQuery) * Math.Sqrt(PowerDocument);

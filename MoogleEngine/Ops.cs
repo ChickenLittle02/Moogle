@@ -99,26 +99,17 @@ namespace MoogleEngine
 
                 if (QueryDividido[i].StartsWith("~"))
                 {
-
-
+                 
                     if (i == 0) break;
                     //EN este caso seria la primera palabra, y no tiene ninguna palabra anterior para verificar
-
-
 
                     foreach (var doc in DocScores)
                     {
                         if (DocumentTF[doc.Key].ContainsKey(QueryClean[i]) & DocumentTF[doc.Key].ContainsKey(QueryClean[i - 1]))
-                        {System.Console.WriteLine(DocumentTF[doc.Key][QueryClean[i]]);
-                        System.Console.WriteLine(DocumentTF[doc.Key][QueryClean[i - 1]]);
-                            if (DocumentTF[doc.Key][QueryClean[i]] != 0 & DocumentTF[doc.Key][QueryClean[i - 1]] != 0)
-                            {
+                        {
                                 Show(DocumentTF);
-                                System.Console.WriteLine(doc.Key);
-                                System.Console.WriteLine("Contiene " + DocumentTF[doc.Key].ContainsKey(QueryClean[i]) + "  en " + QueryClean[i]);
-                                System.Console.WriteLine("Contiene " + DocumentTF[doc.Key].ContainsKey(QueryClean[i - 1]) + "  en " + QueryClean[i - 1]);
                                 double distancia = distance(QueryClean[i], QueryClean[i - 1], DocumentoDividido[doc.Key]);
-                                System.Console.WriteLine("La distancia es " + distancia);
+
 
                                 if (distancia == 0) DocScores[doc.Key] = 1 + DocScores[doc.Key];
 
@@ -127,8 +118,7 @@ namespace MoogleEngine
                                     distancia = 1 / distancia;
                                     DocScores[doc.Key] = distancia + DocScores[doc.Key];
                                 }
-
-                            }
+                            
                         }
                     }
                     continue;

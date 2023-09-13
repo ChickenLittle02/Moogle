@@ -10,7 +10,7 @@ namespace MoogleEngine
         public static Dictionary<string, string[]> DocumentoDividido;
         public static Dictionary<string, double> DocumentIDF;
         public static Dictionary<string, Dictionary<string, double>> DocumentTF_IDF;
-
+ 
         public static void Main()
         {
 
