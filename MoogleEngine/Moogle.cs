@@ -7,6 +7,13 @@ namespace MoogleEngine;
 
 public static class Moogle
 {
+    public static void Show(string[] input){
+        foreach (var item in input)
+        {
+            System.Console.WriteLine(item);
+        }
+
+    }
     public static SearchResult Query(string query)
     {
 
@@ -14,6 +21,7 @@ public static class Moogle
 
         string[] QueryDividido = Busqueda.DivideQuery(query);
         //El query dividido y en minuscula, pero con signos de puntuacion y con operadores
+        Show(QueryDividido);
 
         string[] QueryWithout = Busqueda.Clean(QueryDividido);
         //Un array con todas las palabras del query sin los signos de puntuacion, pero con operadores

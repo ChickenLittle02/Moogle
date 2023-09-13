@@ -9,9 +9,6 @@ namespace MoogleEngine
             //Este metodo recibe la query y devuelve un array de string
             //con las palabras divididas y sin los signos de puntuacion menos los operadores
             System.Console.WriteLine(query);
-            string LowerText = query.ToLower();
-            string space = " ";
-
             for(int i=0; i<query.Length; i++)
             {
                 if(query[i]=='~'){
@@ -24,8 +21,10 @@ namespace MoogleEngine
             }
             
             query = Regex.Replace(query, "~ ", "~");
-
-            System.Console.WriteLine(query);
+            
+            string LowerText = query.ToLower();
+            string space = " ";
+            System.Console.WriteLine(LowerText);
 
             string[] sinCarac = LowerText.Split(space, StringSplitOptions.RemoveEmptyEntries);
             //Aqui divide el string query en palabras segun los espacios
