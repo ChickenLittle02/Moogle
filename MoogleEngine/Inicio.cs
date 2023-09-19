@@ -15,7 +15,8 @@ namespace MoogleEngine
         {
             string folder = Path.Join(@"..", "Content");
             //Aqui recibo donde se encuentra mi proyecto que estoy ejecutando, con .. sale de la carpeta donde esta corriendo el proyecto
-            //Y despues entra a la carpeta Content
+            //Y despues entra a la carpeta Content, y con Path.Join crea una direccion que sirva en dependencia del sistema operativo
+            //donde se ejecute el código
 
             Inicio.dirFile = Directory.GetFiles(folder, "*.txt");
             //dirFile: matriz con los directorios para llegar a cada archivo ejemplo: /Content/habla.txt
@@ -33,7 +34,6 @@ namespace MoogleEngine
 
             Inicio.DocumentIDF = MoogleEngine.ModVec.toIDF(DocumentTF_IDF);
             //DocumentIDF es un diccionario de <palabras, cantidad de documentos en que aparece>
-            // System.Console.WriteLine("DocumentIDF    "+ DocumentIDF.Count);
 
             MoogleEngine.ModVec.toTF_IDF(DocumentTF_IDF, DocumentIDF);
 

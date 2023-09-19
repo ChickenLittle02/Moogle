@@ -26,17 +26,17 @@ public static class Moogle
         //Para hacer la sugerencia vamos a dar los resultados en minuscula, entonces cogemos el query, lo llevamos a minuscula y lo separamos
         // le quitamos los signos de puntuacion, despues le quitamos los operadores, despues lo comparamos con la distancia levenshtein
         // Si antes de la distancia levenshtein esta palabra es distinta a la palabra despues de la levenshtein, 
-        //cambio la palabra de antes de la distancia por la de despues de la distancia en la que tiene signos de puntuacion
+        //se sutituye la palabra de antes de la distancia por la de despues de la distancia, en la query que tiene signos de puntuacion
 
         string[] LowerQueryWithout = Busqueda.LowerString(QueryWithout);
         //Un array con todas las palabras del query sin operadores y en minuscula
 
         string[] QueryClean = Busqueda.SearchTheOne(LowerQueryWithout, Inicio.DocumentIDF);
-        //Este es un array con las palabras que no se encontraban en el IDF sustituidas por la palabra que menor distancia levenshtein tenga
+        //Este es un array con las palabras de la query que no se encontraban en el IDF sustituidas por la palabra que menor distancia levenshtein tenga
         //con respecto a las palabras del IDF
 
         string suggestion = Busqueda.Change(QueryDividido, LowerQueryWithout, QueryClean);
-        //Aqui se guarda la sugerencia, que seria la query con las palabras mal escritas o que el no encontro cambiadas
+        //Aqui se guarda la sugerencia, que seria la query con las palabras mal escritas o que no se encontraron cambiadas
 
         Dictionary<string, double> QueryTF = ModVec.ToQueryTF(LowerQueryWithout);
         //QueryTF es un diccionario de <palabras del query,TF de la palabra>

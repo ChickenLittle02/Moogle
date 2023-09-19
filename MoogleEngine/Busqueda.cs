@@ -7,9 +7,12 @@ namespace MoogleEngine
         public static string[] DivideQuery(string query)
         {
             //Este metodo recibe la query y devuelve un array de string
-            //con las palabras divididas y sin los signos de puntuacion menos los operadores
+            //con las palabras divididas y, y sin cualquier operador de '~' que no tenga un espacio después
+            //pues para ser utilizado debe tener un espacio seguido
+
             for(int i=0; i<query.Length; i++)
-            {
+            {//COn este for verifico si existe algún operador de ~, en ese caso compruebo si está en la última posicion de la query,
+            //o si tiene algún espacio delante, y en ambos casos llamo al método COpyQUery que me devuelve una query sin ese caracter 
                 if(query[i]=='~'){
                     if(i==query.Length-1){
                         query = CopyQuery(query,i);
@@ -20,13 +23,14 @@ namespace MoogleEngine
             }
             
             query = Regex.Replace(query, "~ ", "~");
-            
+            //Luego como todos los operadores "~" están seguidos de un espacio los sustituyo por solo el operador ~, pues facilita el trabajo más adelante
+
             string LowerText = query.ToLower();
             string space = " ";
-            string[] sinCarac = LowerText.Split(space, StringSplitOptions.RemoveEmptyEntries);
+            string[] query_divided = LowerText.Split(space, StringSplitOptions.RemoveEmptyEntries);
             //Aqui divide el string query en palabras segun los espacios
 
-            return sinCarac;
+            return query_divided;
         }
 
         public static string CopyQuery(string query, int i){
@@ -93,7 +97,7 @@ namespace MoogleEngine
         public static string[] SearchTheOne(string[] query, Dictionary<string, double> Doc_IDF)
         {
             /*Este metodo recibe el array de string con las palabras de la query divididas y sin ningun signo de puntuacion
-            yield verifica si la palabra esta o no entre las palabras de los documentos, si no esta, compara con la distancia Levenshtein
+            y verifica si la palabra aparece o no entre las palabras de los documentos, si no esta, compara con la distancia Levenshtein
             la palabra que mas se le parezca y la sustituye por esa en la query*/
 
             string[] queryCopy = new string[query.Length];
@@ -105,10 +109,10 @@ namespace MoogleEngine
                 if (!Doc_IDF.ContainsKey(queryCopy[i]) && !(queryCopy[i] == "")) queryCopy[i] = PalabraPreferida(queryCopy[i], Doc_IDF);
 
                 // si esa palabra == "" quiere decir que era un operador o un signo de puntuacion solamente, o 
-                //una combinacion de las dos, entonces no es una palabra por tsnto no hay que buscarle ninguna palabra para cambiarla,
+                //una combinacion de las dos, entonces no es una palabra por tanto no hay que buscarle ninguna palabra para cambiarla,
                 //Entonces habria que verificar si el diccionario IDF no contiene la palabra, 
                 //lo que quiere decir que no es ninguna palabra de algun documento,
-                //y //en cualquier otro caso tengo que comparar la levenshtein con cada palabra del diccionario
+                //y en cualquier otro caso tengo que comparar la levenshtein con cada palabra del diccionario
                 // y quedarme con la que menor distancia tenga, y esa sustituirla por la palabra que estaba mal               
             }
 
@@ -156,8 +160,7 @@ namespace MoogleEngine
             if (string.IsNullOrEmpty(a))
             {//Comprueba el caso de que una de las palabras sea null
                 if (!string.IsNullOrEmpty(b))
-
-                {//En el caso de que la otra sea null, la distancia es el length de la otra palabra porque tiene que agregar esa misma cantidad de letras
+                {//En el caso de que la otra no sea null, la distancia es el length de la otra palabra porque tiene que agregar esa misma cantidad de letras
 
                     return b.Length;
                 }
@@ -181,19 +184,19 @@ namespace MoogleEngine
             Int32 min2;
             Int32 min3;
 
-            for (Int32 i = 0; i <= d.GetUpperBound(0); i += 1)
+            for (Int32 i = 0; i <= d.GetUpperBound(0); i++)
             {
                 d[i, 0] = i;
             }
 
-            for (Int32 i = 0; i <= d.GetUpperBound(1); i += 1)
+            for (Int32 i = 0; i <= d.GetUpperBound(1); i++)
             {
                 d[0, i] = i;
             }
 
-            for (Int32 i = 1; i <= d.GetUpperBound(0); i += 1)
+            for (Int32 i = 1; i <= d.GetUpperBound(0); i++)
             {
-                for (Int32 j = 1; j <= d.GetUpperBound(1); j += 1)
+                for (Int32 j = 1; j <= d.GetUpperBound(1); j++)
                 {
                     cost = Convert.ToInt32(!(a[i - 1] == b[j - 1]));
 
@@ -215,7 +218,8 @@ namespace MoogleEngine
             // Este metodo es para hacer la sugerencia, recibe
             // un array de string con las palabras de la query divididas y con las letras en minuscula, QueryDividido
             //recibe un array de string con las palabras de la query divididas, en minuscula, y sin operadores LowerQueryWithout
-            // un array de string con las palabras de la query divididas, sin operadores, con la letra minuscula y modificadas por la levenshtein QueryClean
+            // un array de string con las palabras de la query divididas, sin operadores, con la letra minuscula y 
+            //modificadas por la levenshtein QueryClean
 
 
             string[] QueryDividido2 = new string[QueryDividido.Length];
@@ -223,7 +227,7 @@ namespace MoogleEngine
 
             for (int i = 0; i < QueryDividido2.Length; i++)
             {
-                //COn este for voy recorriendo el array de palabra de la query sin signos, y con letra normal
+                //Con este for voy recorriendo el array de palabra de la query sin signos
 
                 if (!(LowerQueryWithout[i] == QueryClean[i]))
                 {

@@ -121,7 +121,7 @@ namespace MoogleEngine
              // Despues voy iterando por el array de palabras de ese documento y agregando las palabras al Diccionario TF,
              // y va contando las veces que aparece esa palabra en el documento,
              // si la palabra no aparece se agrega nueva y se le pone como double 1, porque aparece una vez,
-             //Si esa palabra aparece en el diccionario entonces se le suma uno al valor de double 
+             //Si esa palabra aparece en el diccionario entonces se le suma uno al valor de double
 
                 double max = 0;
                 //Max va a ser el valor de la cantidad de veces que mas se repite una palabra en el documento
@@ -140,7 +140,8 @@ namespace MoogleEngine
 
                 }
 
-                //Hay que normalizar el TF, para eso si dividen los valores por la frecuencia mas alta
+                //Hay que normalizar el TF, para que los valores sean menores que 1 y no sean demasiado grandes,
+                // para eso si dividen los valores por la frecuencia mas alta
 
                 foreach (var word in Documento)
                 {
@@ -207,7 +208,7 @@ namespace MoogleEngine
         public static void toTF_IDF(Dictionary<string, Dictionary<string, double>> DOcumentTF, Dictionary<string, double> DOcumentIDF)
         {
             //Este metodo recibe un diccionario DOcumentTF con los TF de cada palabra en cada documento, y un diccionario con los IDF
-            //Y convierte el diccionario DOcumentTF es un diccionario<nombre de documento,Diccionario<palabras del documento, valores TF_IDF>>
+            //Y convierte el diccionario DOcumentTF en un diccionario<nombre de documento,Diccionario<palabras del documento, valores TF_IDF>>
             //EL TF_IDF es el valor TF de la palabra en ese documento por el valor IDF de esa palabra
 
             bool exist;
@@ -219,10 +220,12 @@ namespace MoogleEngine
             Dictionary<string, Dictionary<string, double>> TF_IDF = new Dictionary<string, Dictionary<string, double>>();
 
             foreach (var document in DOcumentTF)
-            {//Con este foreach voy iterando por cada documento, y por cada uno creo un diccionario de <palabras, valor TF_IDF> 
+            {//Con este foreach voy iterando por cada documento, 
              //y despues voy iterando por todos los elementos del IDF y comprobando si estan en las palabras,
-             //SI estan el value de cada palabra en el TF seria el valor tf, entonces lo multiplico por el valor IDF, y ese producto es el TF_IDF
-             //EN caso de no estar agregada la palabra entonces la agrego y le pongo como valor TF_IDF 0
+             //SI estan, guardo el value de la palabra que sería el valor de tf y lo multiplico por el valor IDF, y ese producto que es el TF_IDF, 
+             //lo guardo como value de la palabra en el diccionario DocumentTF
+             //EN caso de no estar agregada la palabra entonces la omitimos, porque siempre va a tener valor de TF_IDF 0,
+             //pues como no aparece en el documento su TF sería 0
 
 
                 foreach (var word in DOcumentIDF)
@@ -332,11 +335,10 @@ namespace MoogleEngine
             Dictionary<string, double> DocScores = new Dictionary<string, double>();
 
             foreach (var doc in DocumentTF_IDF)
-            {//Este foreach va recorriendo cada documento y va calculando la similitud en tre las palabras de ese documento y las palabras de la query
+            {//Este foreach va recorriendo cada documento y va calculando la similitud entre las palabras de ese documento y las palabras de la query
              //Y esa similitud es el score
 
                 DocScores[doc.Key] = CosineSImilitude(QueryTF_IDF, doc.Value);
-                System.Console.WriteLine(doc.Key+"   "+DocScores[doc.Key]);
             }
 
             return DocScores;
@@ -364,7 +366,10 @@ namespace MoogleEngine
             foreach (var wordQuery in QueryTF_IDF)
             {   //Con este for voy iterando por los pesos de cada palabra de la query
                 // Y por cada palabra de la query veo tambien el peso de esa palabra en el documento
-                //Asi calculo el producto de ambos pesos y los voy sumando con los de la siguiente palabra y asi sucesivamente
+                //SI esa palabra aparece en el documento va a tener un peso, y en caso de que no aparezca, va a tener valor TF_IDF 0,
+                //Por tanto en caso de que una palabra de la query no aparezca en el documento se puede omitir buscar la palabra en el documento, pues no aporta nada
+                //Asi en caso de que la palabra exista en la query y en el documento
+                // calculo el producto de ambos pesos y los voy sumando con los de la siguiente palabra y asi sucesivamente
                 //Tambien voy calculando el cuadrado de cada peso de la query y se lo sumo al cuadrado del peso de la siguiente palabra de la query y asi ...
                 //voy calculando el cuadrado de cada  del documento y se lo sumo al cuadrado del peso de la siguiente palabra del documento y asi ...
                 if (DocumentTF_IDF.ContainsKey(wordQuery.Key))
