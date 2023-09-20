@@ -2,18 +2,18 @@
 %pt define el tamaño de la fuente, y el parametro de la derecha
 % define el tamaño de la hoja
 
-%\usepackage[spanish]{babel}
+
+\usepackage{imakeidx}
+%este paquete permite crearle un indice al documento
 
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{graphicx}
+
+\usepackage[spanish]{babel}
 %COn este paquete todos los subtítulos definidos por Latex en vez de salir en Inglés salen en español
 %Por ejemplo en abstract, con este paquete en vez de poner abstract pone Resumen
 %SI lo quitamos pone abstract de nuevo
-
-\title{Informe de Proyecto de Progamación\\ “Moogle”}
-\author{Rubén Martínez Rojas}
-\date{}
 
 \begin{document}
 \begin{titlepage}
@@ -36,6 +36,10 @@
       {\scshape\large Rubén Martínez Rojas \par}
 \end{titlepage}
 
+\newpage
+\tableofcontents
+
+\newpage
 \begin{abstract}
       Moogle es una página web creada con el fin de buscar
       un texto en un grupo de archivos. Para su funcionamiento
@@ -55,9 +59,13 @@ Para la creación del Proyecto se implementaron diferentes clases en MoogleEngin
             para realizar los cálculos del Modelo Vectorial utilizando las fórmulas del TF-IDF,
             los cálculos para obtener el peso de cada palabra de la búsqueda del usuario,
             y la similitud de coseno para calcular el score de cada documento según su relevancia.
-      \item \textbf{Búsqueda:} La clase donde se trabaja con la query para crear una sugerencia,
-            y para después con el método ModVec calcular el peso de cada una de sus palabras
-      \item \textbf{Ops:} La clase con la que después de calcular el score de
+      \item \textbf{Moogle:} Una clase que contiene el método SearchQuery, que es el que ejecuta todo el procesamiento
+            de la query, calcula el score de similitud entre la query y cada documento, aplica los efectos de los operadores,
+            y da los resultados de la búsqueda
+      \item \textbf{Búsqueda:} La clase que contiene los métodos donde se trabaja con la query para crear 
+            una sugerencia, y para después con algunos métodos de la clase ModVec calcular el peso de cada 
+            una de sus palabras
+      \item \textbf{Ops:} La clase que contiene los métodos con los que después de calcular el score de
             cada documento se le aplica el efecto de los distintos operadores
             ! , $\wedge$ , $\sim$ , * a los resultados
       \item \textbf{Matrices:} Una clase que no se ejecuta en el proyecto, pero que permite sumar,
@@ -74,7 +82,9 @@ ejecute la búsqueda.
 Cómo funciona Moogle! ??
 
 \begin{enumerate}
-      \item Cuando se ejecuta el proyecto, se ponen en funcionamiento una serie de métodos que procesan el texto de los documentos, son los métodos de la clase Inicio, que llaman a algunos métodos de la clase ModVec, y para cuando aparece la página web del Moogle está creado un Diccionario de
+      \item Cuando se ejecuta el proyecto, se ponen en funcionamiento una serie de métodos que procesan el texto de los documentos, 
+            son los métodos de la clase Inicio, que llaman a algunos métodos de la clase ModVec, 
+            y para cuando aparece la página web del Moogle está creado un Diccionario de
             $<$documentos, Diccionario$<$palabras del documento, TF-IDF de cada palabra$>>$
       \item Cuando introducimos una búsqueda en nuestra página, se comienza a ejecutar el método Query de la clase Moogle, que:
             \begin{enumerate}
@@ -82,16 +92,19 @@ Cómo funciona Moogle! ??
                         la query hasta crear la sugerencia,  y después, utilizando los métodos
                         de la clase ModVec crea un Diccionario de
                         $<$palabras de la query, peso de cada palabra$>$
-                  \item Posteriormente utilizando la clase ModVec, y los archivos creados al iniciar el Proyecto, se calcula la similitud de coseno de cada documento con la query, asignándole un score a cada documento y creando un Diccionario de
-                        $<$Documentos, Score del Documento$>$
+                  \item Posteriormente utilizando la clase ModVec, y los archivos creados al iniciar el Proyecto, 
+                  se calcula la similitud de coseno de cada documento con la query, asignándole un score a cada documento y 
+                  creando un Diccionario de $<$Documentos, Score del Documento$>$
                   \item Después utilizando los métodos de la clase Ops,
                         se le aplica el efecto de los distintos operadores a ese
                         diccionario, quedándonos con la parte de los documentos
                         que nos importan para dar como resultados
-                  \item Y a ese Diccionario en dependencia de si todas las palabras de la búsqueda tienen el operador ! o no, se le eliminan los documentos con score 0.
-                  \item Después se ordenan los documentos y se dan como resultado los 5 primeros documentos, y además la sugerencia, que es lo que devuelve el método Query.
+                  \item Y a ese Diccionario en dependencia de si todas las palabras de la búsqueda tienen el operador ! o no, 
+                        se le eliminan los documentos con score 0.
+                  \item Después se ordenan los documentos y se dan como resultado los 5 primeros documentos, y además la sugerencia, 
+                        que es lo que devuelve el método Query.
                         Y esos documentos y la sugerencia que son devueltas son mostradas en la página donde el usuario hizo la búsqueda
-                        %Ver como cambiar para que aquí salga con números romanos en vez de con letras        
+                  
             \end{enumerate}
 
 \end{enumerate}
@@ -100,7 +113,10 @@ Cómo funciona Moogle! ??
 
 Cuando el proyecto comienza a ejecutarse, antes de abrirse la página web
 en la que el usuario introduce la búsqueda, se ejecuta el método Main
-de la clase Inicio de MoogleEngine, y ahí se comienza a hacer lo siguiente:
+de la clase Inicio de MoogleEngine, y ahí se comienza a procesar el conjunto
+de documentos guardados anteriormente en la carpeta Content.
+
+\subsection{Procesamiento de los documentos}
 
 \begin{enumerate}
       \item Primeramente, hay que acceder a la carpeta donde están todos los documentos
@@ -125,12 +141,17 @@ de la clase Inicio de MoogleEngine, y ahí se comienza a hacer lo siguiente:
       \item Con el método ToTF de la clase ModVec, creamos un Diccionario de
             $<$string,Diccionario$<$string, double$>$$>$ donde guardamos\\
             $<$nombre del documento,$<$palabras del documento, TF de cada pa-labra en el documento$>$.\\
+            
+            La fórmula que usamos para calcular el TF de una palabra
+            en un do-cumento es:
 
-                  La fórmula que usamos para calcular el TF de una palabra
-                  en un do-cumento es
-            $TF_{palabra}=\frac{Freq}{MaxFreq}$;\\
+            \begin{center}
+                  {\large$TF_{palabra}=\frac{Freq}{MaxFreq}$}
+            \end{center}
+
             Freq = las veces que aparece la palabra en el documento;\\
             MaxFreq = la frecuencia de la palabra que más veces aparece en el documento;\\
+            
             Con el método ToTF vamos recorriendo cada documento del diccionario anterior,
             por cada documento creamos un diccionario, e iteramos por el array de
             palabras del documento anterior, si la palabra en ese diccionario no
@@ -142,26 +163,35 @@ de la clase Inicio de MoogleEngine, y ahí se comienza a hacer lo siguiente:
             y así tenemos el TF de cada palabra. Cuando una palabra aparezca mucho va a ser
             relevante para ese documento por tanto su valor de TF va a ser mayor.
 
-      \item Para calcular el IDF usamos la fórmula $\log(\frac{Freq}{Length})$\\
+      \item Para calcular el IDF usamos la fórmula 
+            \begin{center}
+                  {\large$\log(\frac{Freq}{Length})$}                  
+            \end{center}
+            
             Freq = Cantidad de documentos en los que aparece esa palabra\\
-            Length = Total de documentos\\
+            Length = Total de documentos
+
             Cuando una palabra aparezca en muchos documentos, su valor de IDF va a estar más
             cerca de 1 y $\log(1)$ va a estar más cerca de cero, por tanto, su valor de IDF va a
-            ser menor mientras aparezca en más documentos.
+            ser menor mientras la palabra aparezca en más do-cumentos.
+            
             El IDF lo calculamos con el método ToIDF de la clase ModVec, que recibe
             el Diccionario
             $<$nombre del documento,$<$palabras del documento, TF de cada palabra en el documento$>>$
             donde aparecen repetidas por documento la palabra una sola vez, y a partir de él
             crea un nuevo Diccionario de $<$string,double$>$ compuesto por
-            $<$palabras de todos los documentos, IDF de cada palabra$>$, primeramente va guardando
+            $<$palabras de todos los documentos, IDF de cada palabra$>$.
+            
+            Primeramente va guardando
             la cantidad de documentos en que aparece la palabra, recorriendo cada documento
             del diccionario TF y y verificando si tiene ya agregada la palabra al
             Diccionario IDF, en caso de tenerla le suma 1 a su frecuencia de aparición;
             y en caso de no tenerla agrega la palabra, y le pone como frecuencia 1.
             Después vuelve a iterar por cada palabra, dividiendo cada frecuencia por el total
             de documentos y calculando el logaritmo de esa división, dejando creado un
-            diccionario con los valores TF de cada palabra.\\
-            Ya teniendo ambos diccionarios TF e IDF, con el método ToTF\_IDF de la clase ModVec
+            diccionario con los valores TF de cada palabra.
+
+      \item Ya teniendo ambos diccionarios TF e IDF, con el método ToTF\_IDF de la clase ModVec
             calculamos el TF\_IDF, que no es más que el producto del valor TF de cada palabra
             en el documento, por el valor IDF de la palabra. Este es un método void que
             recibe ambos diccionarios el de TF y el de IDF, y modifica el valor del TF de cada
@@ -172,18 +202,21 @@ de la clase Inicio de MoogleEngine, y ahí se comienza a hacer lo siguiente:
             va iterando por todas las palabras del IDF, verificando si están en el documento,
             en caso de estarlo multiplican el valor TF*IDF de esa palabra y ya guardan en ese
             valor como TF\_IDF, en caso de no estarlo es porque la palabra no aparece en el documento,
-            por tanto su TF es 0, y al multiplicarlo anularía todo el resultado, por tanto se
-            pone directamente que el valor TF\_IDF de esa palabra en ese documento es 0.\\
+            por tanto su TF es 0, no aportaría ningún dato, por tanto no se guardan con ningún valor.
+            
             Aquí se termina de ejecutar el método Main, y posteriormente aparece la página del Moogle
             donde el usuario puede hacer sus búsquedas, al hacer una búsqueda se comienza a ejecutar
             el método Query de la clase Moogle, que da como resultado los documentos a mostrar y
             las sugerencias.
+            
+            \end{enumerate}
 
-      \item Con el diccionario de TF\_IDF solo nos quedaría trabajar con la query para hacer la
+\subsection{Procesamiento de la query}
+            Ya creado el diccionario de TF\_IDF, solo nos quedaría trabajar con la query para hacer la
             sugerencia, crearle un peso a cada palabra de la query, y con la similitud de
             coseno hacer un sistema de scores que represente la relevancia de
             cada documento con respecto a la query.
-            \begin{itemize}
+            \begin{enumerate}
                   \item Primeramente para hacer la sugerencia, trabajamos con la query que
                         se recibe en un string.
                   \item Con el método \textbf{DivideQuery} de la clase búsqueda,
@@ -221,19 +254,20 @@ de la clase Inicio de MoogleEngine, y ahí se comienza a hacer lo siguiente:
                         string, vamos a la posición del array con las palabras en minúscula y
                         con signos de puntuación, y cambiamos la palabra vieja por la nueva, y al final
                         con Split volvemos a unir todo el array de palabras ya modificado y esa es la
-                        sugerencia\\
-                        Después con el método \textbf{ToTFQuery} de la clase ModVec calculamos el
+                        sugerencia
+                  \item Después con el método \textbf{ToTFQuery} de la clase ModVec calculamos el
                         tf de la palabra, con la misma fórmula vista anteriormente $\frac{Freq}{MaxFreq}$,
                         y lo hacemos a partir del array de palabras de la query que no ha
                         sido modificado por la levenshtein, contamos las veces que aparece
                         cada palabra, buscamos la frecuencia mayor y las dividimos,
                         y guardamos un diccionario de $<$string, double$>$,
-                        con $<$palabras, tf de cada palabra$>$\\
-                        Posteriormente con el método \textbf{ToQueryTF\_IDF} de la clase ModVec
+                        con $<$palabras, tf de cada palabra$>$
+                  \item Posteriormente con el método \textbf{ToQueryTF\_IDF} de la clase ModVec
                         creamos un diccionario de $<$string, double$>$ que contiene
                         $<$palabras de la query, peso de la palabra$>$ y se calcula su el peso de
                         cada palabra con la fórmula
-                        (a+(1-a)*TF de la palabra)*IDF de la palabra , donde a = 0,5;\\
+                        (a+(1-a)*TF de la palabra)*IDF de la palabra , donde a = 0,5.
+                        
                         Entonces lo que hace este método es ir iterando por el diccionario de
                         $<$palabras, IDF de la palabra$>$ creado anteriormente para los documentos ,
                         si la palabra aparece en el diccionario de\\
@@ -241,111 +275,161 @@ de la clase Inicio de MoogleEngine, y ahí se comienza a hacer lo siguiente:
                         aplicamos la fórmula anterior y la agregamos con ese valor de peso, en caso de no aparecer
                         en el diccionario de palabras de la query le ponemos como valor 0, de esta manera
                         si hay alguna palabra en la query que no aparezca en ningún documento es obviada.\\
-                        Después se ejecuta el método \textbf{SearchScore} de la clase ModVec,
-                        que crea un diccionario de $<$Documentos, peso del documento$>$ \\
+                        
+                        \end{enumerate}
+                        \subsection{Cálculo del score, y aplicacion de los operadores a los resultados}
+                        Ya con el cuerpo de documentos y la query procesados, se realiza
+                        el cálculo del Score de cada documento, y después de aplicar el efecto de los
+                        operadores se devuelve como resultado los 5 primeros documentos con mayor Score
+                        
+                        \begin{enumerate}      
+                  \item Para esto, primero se ejecuta el método \textbf{SearchScore} 
+                        de la clase ModVec,
+                        que crea un diccionario de $<$Documentos, peso del documento$>$\\
                         Para el calcular el score utilizamos la fórmula de similitud de coseno, que busca la similitud
                         entre el vector de palabras de cada documento, y el vector de palabras de la query,
-                        con la fórmula\\
-                        $W_{iq} \rightarrow$ Peso de la palabra i en la query\\
-                        $W_{iq} \rightarrow$ Peso de la misma palabra i, en el documento j\\
-                        
+                        con la fórmula
                         \quad
                         {
                         \vspace{0.1cm}
                         \begin{center}
-                              {\LARGE$\frac{\sum_{i=1}^{n} W_{i,j} \times W_{iq}}{\sqrt{\sum_{i=1}^{n} W_{i,j}^2} \times \sqrt{\sum_{i=1}^{n} W_{iq}^2}}$}
+                              {\LARGE$\frac{\sum_{i=1}^{n} W_{i,j} \times W_{iq}}{\sqrt{\sum_{i=1}^{n} W_{i,j}^2}  \cdot  \sqrt{\sum_{i=1}^{n} W_{iq}^2}}$}
                         \end{center}
                         \vspace{0.5cm}
                         }
-                        \quad\\
-                        Numerador = Sumatoria de: EL producto del peso de cada palabra en el documento
+                        \quad
+
+                        $W_{iq} \rightarrow$ Peso de la palabra i en la query
+
+                        $W_{ij} \rightarrow$ Peso de la misma palabra i, en el documento j
+                        
+                
+                        Numerador = Sumatoria del producto del peso de cada palabra en el documento
                         por el peso de la misma palabra en la query
-                        Denomindor =
-                        Sumatoria B = Sumatoria de los cuadrados de los pesos de cada palabra del documento.\\
+ 
+                        Denominador = $\sqrt{A} \cdot \sqrt{B}$, donde 
+                        
+                        A= Sumatoria del producto del cuadrado del peso de las palabras
+                        en el documento
+                        
+                        B = Sumatoria del producto del cuadrado del peso de las palabras
+                        en la query
+                        
                         El método recibe el diccionario de $<$documentos, $<$palabra del documento, tf\_idf de la palabra$>>$\\
                         Y el diccionario de $<$palabras de la query, peso de la palabra$>$\\
+                        Recordar que este útlimo contiene todas las palabras de la query y de los documentos,
                         Por cada palabra de la query en el diccionario de palabras en la query,
-                        va calculando la sumatoria de los pesos de la palabra en la query,
-                        y va calculando la sumatoria de los pesos de la palabra en el documento, y
-                        va calculando la sumatoria del producto del peso de la palabra en la query por
-                        el peso de la palabra en el documento, al final le halla la raíz cuadrada a
+                        se verifica si aparece en el documento, y en ese caso:
+                        
+                        Va calculando la sumatoria 
+                        de los pesos de la palabra en la query, la sumatoria de los pesos de la palabra en el documento, y
+                        la sumatoria del producto del peso de la palabra en la query por
+                        el peso de la palabra en el documento.
+                        
+                        En caso de no aparecer la palabra en el documento solo 
+                        va calculando la sumatoria de los pesos de la palabra en la query, pues el resto de los valores serían 0.
+                        
+                        Al final le halla la raíz cuadrada a
                         la sumatoria A y a la sumatoria B, si el producto de las dos raíces es 0,
                         el valor del score es 0 automáticamente, sino se hace la división y
                         ese es el valor del score.
                         $\wedge$ , $\sim$ , *
-
+                        
                   \item Posteriormente con el método CleanDocs de la clase Ops,
-                        se aplica el efecto de cada operador a los resultados. Los operadores son:\\
-                        ! si aparece delante de alguna palabra significa que la palabra
-                        no puede existir en el documento\\
-                        $\wedge$ si aparece delante de alguna palabra significa que la palabra tiene
-                        que existir obligatoriamente en el documento\\
-                        * si aparece delante de una palabra, quiere decir que si la palabra está
+                        se aplica el efecto de cada operador a los resultados. Los operadores son:
+                        
+                        ¨\textbf{!}¨ si aparece delante de alguna palabra significa que la palabra
+                        no puede existir en el documento
+                        
+                        ¨\textbf{$\wedge$}¨ si aparece delante de alguna palabra significa que la palabra tiene
+                        que existir obligatoriamente en el documento
+
+                        ¨\textbf{*}¨ si aparece delante de una palabra, quiere decir que si la palabra está
                         en alguno de los resultados, ese resultado tiene mayor relevancia,
-                        mientras más veces se repite el operador más relevancia tiene\\
-                        $\sim$ Aparece entre 2 palabras, quiere decir que mientras más cerca estén esas
-                        dos palabras más relevancia tiene el documento\\
+                        mientras más veces se repite el operador más relevancia tiene.
+
+                        ¨\textbf{$\sim$}¨ Aparece entre 2 palabras, quiere decir que mientras más cerca estén esas
+                        dos palabras más relevancia tiene el documento
+
                         En caso de aparecer más de un operador delante de una palabra,
-                        solo se tendría en cuenta el primero de ellos.\\
+                        solo se tendría en cuenta el primero de ellos.
+                        
                         Entonces lo que va haciendo este método es, por cada operador va reccorriendo
-                        el array de palabras con operadores que habíamos creado anteriormente, \\
-
-                        si la palabra tiene el operador !\\
-                        - Verifica en el diccionario de
+                        el array de palabras con operadores que habíamos creado anteriormente,
+                        
+                  \begin{itemize}
+                        \item si la palabra tiene el operador \textbf{!}
+                        \begin{itemize}
+                        \item  Verifica en el diccionario de
                         $<$documentos, diccionario $<$palabras del documento, tf de la palabra$>>$,
-                        si el diccionario en ese documento contiene la palabra,
-                        se elimina el documento del diccionario de score.\\
-
-                        Si la palabra empieza con el operador $\wedge$\\
-                        - Verifica en el diccionario de
+                        si el diccionario en ese documento contiene la palabra, y en ese caso
+                        se elimina el documento del diccionario de score.
+                        \end{itemize}
+                  \item Si la palabra empieza con el operador \textbf{$\wedge$}
+                        \begin{itemize}
+                  \item Verifica en el diccionario de
                         $<$documentos, diccionario $<$palabras del documento, tf de la palabra$>>$,
                         si el diccionario en ese documento no contiene la palabra,
-                        se elimina el documento del diccionario de score\\
+                        se elimina el documento del diccionario de score
+                  \end{itemize}
 
-                        Si la palabra empieza con el operador *\\
-                        - Se cuenta cuantas veces aparece el operador\\
-                        - Verifica en el diccionario de
+                  \newpage
+                  \item Si la palabra empieza con el operador *
+                  \begin{itemize}
+                  \item Se cuenta cuantas veces aparece el operador
+                  \item Verifica en el diccionario de
                         $<$documentos, diccionario $<$palabras del documento, tf de la palabra$>>$,
                         si el diccionario en ese documento contiene la palabra,
                         se multiplica el score de ese documento por la cantidad de veces que
-                        se repite el operador + 1.\\
+                        se repite el operador + 1.
+                  \end{itemize}
 
-
-                        Si la palabra comienza con el operador $\sim$\\
-                        - Primero se verifica que no aparezca en la primera palabra,
-                        si aparece en esa palabra no se aplica\\
-                        - SI aparece en cualquier otra posición,
+                  \item Si la palabra esta precedida de  "$\sim$ "
+                  \begin{itemize}
+                  \item Primero se verifica que no aparezca en la primera palabra,
+                        si aparece en esa palabra no se aplica
+                  \item Si aparece en cualquier otra posición,
                         se verifica en el diccionario de
                         $<$documentos, diccionario $<$palabras del documento, tf de la palabra$>>$,
                         si el diccionario en ese documento contiene la palabra y la palabra anterior,
                         en ese caso se cuenta cuantas palabras hay de diferencia entre las dos,\\
                         o si la distancia es 0, quiere decir que es la misma palabra, y se le suma 1 al score
-                        de ese documento.\\
-                        o si la distancia es distinta de 0, se divide 1/distancia y el resultado se le suma
-                        al score de ese documento\\
+                        de ese documento.
 
+                        o si la distancia es distinta de 0, se divide 1/distancia y el resultado se le suma
+                        al score de ese documento
+                  \end{itemize}
 
             \end{itemize}
 
-            Después con el método SortScores de la clase ModVec se ordena el diccionario
-            resultante, guardándolo en una lista ordenada.\\
-            Y Después se dan los resultados:\\
-            - En el caso de que todas las palabras de la query empiecen con el operador !
-            significa que ninguna de esas palabras pueden aparecer,
-            por tanto se quedarían solamente los documentos con score 0,
-            si la lista está vacía, se devuelve SearchItem con
-            (“”,“No hay resultados para su búsqueda”,0) y
-            la sugerencia elaborada anteriormente, y eso es lo que se muestra como resultado.\\
-            Si la lista tiene menos de 5 elementos, se devuelve un SearchItem con
-            $<$nombre del documento, snippet del documento, score del documento$>$
-            de cada documento, y la sugerencia.\\
-            Y si tiene más de 5 elementos, se muestran los 5 primeros documentos\\
-            En el caso de que todas las palabras de la query no empiecen con el operador !
-            se eliminan los documentos con score 0, y se repiten las mismas condiciones
-            para los resultados dichas anteriormente, en dependencia de la cantidad de
-            documentos que queden en la lista.\\
-            \\
-            También hay una clase Matrices en la que:\\
+            \item Después con el método SortScores de la clase ModVec se ordena el diccionario
+            resultante, guardándolo en una lista ordenada.
+            Y después se dan los resultados:
+            \begin{itemize}
+                  \item En el caso de que todas las palabras de la query empiecen con el operador !
+                  significa que ninguna de esas palabras pueden aparecer,
+                  por tanto se quedarían solamente los documentos con score 0,
+                  si la lista está vacía, se devuelve SearchItem con
+                  (“”,“No hay resultados para su búsqueda”,0) y
+                  la sugerencia elaborada anteriormente, y eso es lo que se muestra como resultado.
+                  
+                  \item Si la lista tiene menos de 5 elementos, se devuelve un SearchItem con
+                  $<$nombre del documento, snippet del documento, score del documento$>$
+                  de cada documento, y la sugerencia.
+
+                  \item Y si tiene más de 5 elementos, se muestran los 5 primeros documentos
+            
+                  \item En el caso de que todas las palabras de la query no empiecen con el operador !
+                  se eliminan los documentos con score 0, y se repiten las mismas condiciones
+                  para los resultados dichas anteriormente, en dependencia de la cantidad de
+                  documentos que queden en la lista.
+            \end{itemize}
+ 
+            
+      \end{enumerate}
+            
+            \subsection{Funcionamiento de la clase Matrices}
+            También hay una clase Matrices en la que:
 
             \begin{itemize}
                   \item El método \textbf{Suma}, recibe dos matrices A y B, donde A tiene que tener
@@ -369,14 +453,6 @@ de la clase Inicio de MoogleEngine, y ahí se comienza a hacer lo siguiente:
                         matriz.
 
             \end{itemize}
-
-
-
-
-
-
-
-\end{enumerate}
 
 
 
