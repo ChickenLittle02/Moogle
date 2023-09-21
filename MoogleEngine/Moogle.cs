@@ -18,7 +18,6 @@ public static class Moogle
     {
         string[] QueryDividido = Busqueda.DivideQuery(query);
         //El query dividido y en minuscula, pero con signos de puntuacion y con operadores
-        Show(QueryDividido);
 
         string[] QueryWithout = Busqueda.Clean(QueryDividido);
         //Un array con todas las palabras del query sin los signos de puntuacion, pero con operadores
@@ -167,27 +166,30 @@ public static class Moogle
             }
         }
 
+
         int count = 0;
 
-        foreach (var lineas in texto)
-        {
+        for(int i =0; i<texto.Length; i++){
+        //lo convierte a minuscula porque todas las palabras de la query estan en minusculas en este punto    
+        texto[i] = texto[i].ToLower();
             foreach (var item in QueryTF_IDF)
             {
-
-                if (lineas.Contains(item.Key))
-                {
-                    snip = lineas;
+                if ((item.Value>0)&&texto[i].Contains(item.Key))
+                {//Comprueba que sea distinto de 0, porque solo las palabras de la query que están en el documento son distintas de 0
+                    snip = texto[i];
                     count++;
                     break;
                 }
 
             }
+            if(count!=0) break;
+        
         }
         if (count == 0)
         {
             snip = "";
         }
-
+        System.Console.WriteLine(snip);
         return snip;
 
     }

@@ -87,7 +87,7 @@ namespace MoogleEngine
             //Metodo para quitar signos de puntuacion y demas caracteres que afectan la comprension por la pc
 
             full = Regex.Replace(full, @"[^\p{L}\d\s]", "");
-            //Regex.Replace está remplaxando todos los caracteres que no son \p{L} letras, que no son \d digitos decimales y que no son
+            //Regex.Replace está remplazando todos los caracteres que no son \p{L} letras, que no son \d digitos decimales y que no son
             // espacios en blanco \s, por el caracter vacío ""
 
             string[] sinCarac = full.Split(" ", StringSplitOptions.RemoveEmptyEntries);
@@ -307,7 +307,11 @@ namespace MoogleEngine
             {
                 //Con este for voy recorriendo el array de palabras del Diccionario IDF, en caso de no aparecer la palabra quiere decir 
                 //que el TF de esa palabra en la query es 0, por tanto TF*IDF de esa palabra es 0, en caso de aparecer esa palabra, calculo
-                //su peso por la formula (a+(1-a)*TF)*IDF donde a es un valor entre 0,4 y 0,5 
+                //su peso por la formula (a+(1-a)*TF)*IDF donde a es un valor entre 0,4 y 0,5
+                //Esta es una constante de suavizado, permite amortiguar la variacion en los pesos de términos que ocurren poco, para evitar, por ejemplo
+                //grandes saltos entre la frecuencia de un término que aparece una vez a otro que aparece dos veces
+                //Por ejemplo suponiendo que la maxima frecuencia sea 2, el termino que aparece una vez sin la variable el TF sería 1/2
+                //Y con respecto al termino que aparece 2 veces sería 2/2=1, en cambio con la variable de amoritguacion el primer TF seria 0,75 y el segundo 1.
 
                 exist = QueryTF.ContainsKey(word.Key);
 
