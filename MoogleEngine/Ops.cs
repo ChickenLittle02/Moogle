@@ -143,9 +143,7 @@ namespace MoogleEngine
         static int distance(string p1, string p2, string[] words)
         {//Este metodo recibe dos palabras y un array de palabras, y calcula la cantidad de palabras entre esas dos palabras
 
-            bool primero = true;
-            //La variable primero existe para determinar si la primera palabr que aparece es p1, en ese caso se queda con valor true
-            //o P2 en ese caso toma valor false
+
             int position = 0;
 
             for (int i = 0; i < words.Length; i++)
@@ -165,7 +163,6 @@ namespace MoogleEngine
                     p1 = p2;
                     p2 = temp;
 
-                    primero = false;
                     position = i;
 
                     break;
